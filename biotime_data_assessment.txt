@@ -1,0 +1,80 @@
+BioTIME Data Assessment
+=======================
+
+Current state
+- studies_data.csv shape: 761791 x 9
+- studies_metadata-3.csv shape: 687 x 55
+- Note: metadata CSV has malformed records (rows with inconsistent field counts) and was loaded with on_bad_lines=skip.
+- Inferred data level: record-level/raw
+- Unique STUDY_ID (data): 128
+- Unique lat/lon combinations (data): 25657
+
+What columns we already have
+- Geographic variables: CENT_LAT, CENT_LONG, LATITUDE, LONGITUDE, NUMBER_LAT_LONG
+- Site characteristics: AREA_SQ_KM, BIOME_MAP, DEPTH, HAS_PLOT, REALM
+- Species/diversity metrics: ABUNDANCE, ABUNDANCE_TYPE, BIOMAS, BIOMASS_TYPE, ID_ABUNDANCE, ID_BIOMASS, NUMBER_OF_SPECIES, valid_name
+- Temporal information: DATE_STUDY_ADDED, END_YEAR, START_YEAR, YEAR
+- Environmental variables: CLIMATE, GRAIN_SIZE_TEXT, GRAIN_SQ_KM
+
+ML diagnosis
+- Clear target `species_richness` exists in raw file: No
+- Species column available for deriving richness: valid_name
+- Need aggregation to site level first: True
+- Current files contain very limited continuous environmental predictors; external raster covariates are needed.
+
+Prioritized external variables to add
+1. CRITICAL
+- Variable: BIO1-BIO19 bioclim variables (temp/precip seasonality)
+  Source: WorldClim v2.1 or CHELSA
+  Merge: Extract raster values at each site lat/lon; if temporal matching needed use year-specific climatology or 2000-2020 normals
+  Why/method: Core continuous predictors for Ridge/Lasso/Elastic Net, GAM smooths, and RF splits
+- Variable: Elevation + terrain (slope, roughness)
+  Source: SRTM 30m / GMTED2010
+  Merge: Raster extraction by site coordinates
+  Why/method: Controls biodiversity gradients, improves all model families
+- Variable: Human pressure
+  Source: Global Human Footprint 2009/2013 or Global Human Modification
+  Merge: Raster extraction by site coordinates, optionally nearest-year version
+  Why/method: Strong anthropogenic predictor for biodiversity loss/gain
+2. RECOMMENDED
+- Variable: Land cover class
+  Source: ESA WorldCover (10m) or MODIS MCD12Q1
+  Merge: Spatial join point-to-raster, then one-hot encode categories
+  Why/method: Useful categorical context for RF and interaction terms
+- Variable: Primary productivity (NDVI/EVI)
+  Source: MODIS MOD13Q1/MOD13A2
+  Merge: Year-matched seasonal or annual aggregates extracted at coordinates
+  Why/method: Dynamic productivity signal for GAM/RF
+- Variable: Soil variables (terrestrial)
+  Source: SoilGrids (pH, SOC, texture)
+  Merge: Raster extraction by lat/lon
+  Why/method: Key edaphic constraints for terrestrial studies
+- Variable: Ocean variables (marine studies)
+  Source: Bio-ORACLE/MARSPEC/NOAA OISST
+  Merge: Extract SST, salinity, chlorophyll by lat/lon; match year/month when possible
+  Why/method: Essential for marine biodiversity responses
+3. OPTIONAL
+- Variable: Protected area status
+  Source: WDPA polygons
+  Merge: Point-in-polygon join
+  Why/method: Policy interpretation and management relevance
+- Variable: Accessibility metrics
+  Source: Global roads/settlements (OSM/GRIP)
+  Merge: Compute distance-to-road/city from coordinates
+  Why/method: Captures disturbance and sampling bias
+- Variable: Climate variability/trends
+  Source: TerraClimate or ERA5
+  Merge: Compute site-level interannual SD/trend using year series
+  Why/method: Can improve temporal prediction
+
+Data preparation checklist
+[ ] Step 1: Fix/validate metadata parsing (repair malformed CSV quoting or export a clean metadata table).
+[ ] Step 2: Standardize names: STUDY_ID, LATITUDE, LONGITUDE, YEAR, valid_name, ABUNDANCE, DEPTH, SAMPLE_DESC.
+[ ] Step 3: Aggregate to site-level table by (STUDY_ID, LATITUDE, LONGITUDE) with species_richness, total_abundance, n_samples, mean_depth, year_range.
+[ ] Step 4: Decide target variable for modeling (species_richness or transformed richness).
+[ ] Step 5: Download and extract CRITICAL predictors (BIO1-19, elevation/terrain, human footprint) by site coordinates.
+[ ] Step 6: Add RECOMMENDED predictors (land cover, NDVI/EVI, soil or marine covariates depending on realm).
+[ ] Step 7: Join predictors to site table and audit missingness per variable and per study.
+[ ] Step 8: Filter/impute predictors, remove near-zero variance, and handle collinearity (especially for Elastic Net baseline).
+[ ] Step 9: Build train/validation splits by study and/or spatial block to avoid leakage.
+[ ] Step 10: Fit Ridge/Lasso/Elastic Net, GAM, and RF with comparable CV protocol and evaluate performance.
