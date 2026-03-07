@@ -1,0 +1,32 @@
+column_name,source,data_type_role,how_created,description
+STUDY_ID,original,identifier,from studies_data.csv,BioTIME study identifier
+LATITUDE,original,numeric,from studies_data.csv,Site latitude in decimal degrees
+LONGITUDE,original,numeric,from studies_data.csv,Site longitude in decimal degrees
+species_richness,derived,target_numeric,"nunique(valid_name) grouped by STUDY_ID,LATITUDE,LONGITUDE",Number of unique species per site
+total_abundance,derived,numeric,sum(ABUNDANCE) grouped by site,Total abundance per site
+mean_depth,derived,numeric,mean(DEPTH) grouped by site; NaN filled by realm median,Average site depth
+n_samples,derived,numeric,nunique(SAMPLE_DESC) grouped by site,Number of unique sampling events per site
+n_years,derived,numeric,(year_end - year_start) + 1,Number of sampled years per site
+year_start,derived,numeric,min(YEAR) grouped by site,First sampling year at site
+year_end,derived,numeric,max(YEAR) grouped by site,Last sampling year at site
+realm,original_metadata,categorical,from studies_metadata-3.csv REALM (first by STUDY_ID),Broad ecosystem realm
+biome,original_metadata,categorical,from studies_metadata-3.csv BIOME_MAP (first by STUDY_ID),Biome/ecoregion category
+climate,original_metadata,categorical,from studies_metadata-3.csv CLIMATE (first by STUDY_ID),Climate zone label
+AREA_SQ_KM,original_metadata,numeric,from studies_metadata-3.csv AREA_SQ_KM (median by STUDY_ID),Study/site area in square km
+abs_latitude,engineered,numeric,abs(LATITUDE),Absolute latitude
+dist_from_equator_km,engineered,numeric,abs_latitude * 111.32,Approximate distance from equator in km
+hemisphere,engineered,categorical,'N' if LATITUDE >= 0 else 'S',Hemisphere indicator
+tropical,engineered,binary,1 if abs_latitude < 23.5 else 0,Tropical belt flag
+temperate,engineered,binary,1 if 23.5 <= abs_latitude < 66.5 else 0,Temperate belt flag
+polar,engineered,binary,1 if abs_latitude >= 66.5 else 0,Polar belt flag
+temp_proxy,engineered,numeric,30 - (0.5 * abs_latitude),Crude annual temperature proxy
+temp_range_proxy,engineered,numeric,abs_latitude * 0.3,Crude temperature seasonality proxy
+precip_proxy,engineered,numeric,2000 - (15 * abs_latitude) + Gaussian noise,Crude annual precipitation proxy
+log_area,engineered,numeric,log(AREA_SQ_KM + 1),Log-transformed area
+sampling_intensity,engineered,numeric,n_samples / n_years,Sampling effort rate
+depth_category,engineered,categorical,"shallow(<50), medium(50-200), deep(>200)",Depth class from mean_depth
+coastal_proxy,engineered,binary,1 if mean_depth < 200 else 0,Continental shelf/coastal proxy
+temp_squared,engineered,numeric,temp_proxy ** 2,Quadratic temperature term
+temp_x_precip,engineered,numeric,temp_proxy * precip_proxy,Temperature-precipitation interaction
+latitude_squared,engineered,numeric,abs_latitude ** 2,Quadratic latitude term
+productivity_proxy,engineered,numeric,(temp_proxy * precip_proxy) / 1000,Crude productivity proxy (NPP-like)
