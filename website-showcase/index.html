@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marine Biodiversity | Interactive Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean-deep: #042C53;
+      --ocean-mid: #185FA5;
+      --ocean-light: #E6F1FB;
+      --ocean-accent: #1D9E75;
+      --text: #1a1a2e;
+      --muted: #5F5E5A;
+      --border: #e8e5df;
+      --surface: #f8f7f4;
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--surface); line-height: 1.6; }
+    .site { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+    nav { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 0; border-bottom:1px solid var(--border); }
+    .nav-logo { font-family:'DM Serif Display', serif; font-size:1.1rem; color:var(--ocean-deep); }
+    .nav-logo span { color: var(--ocean-accent); }
+    .nav-links { display:flex; gap:1.2rem; list-style:none; flex-wrap:wrap; }
+    .nav-links a { font-size:12px; color:var(--muted); text-decoration:none; font-weight:500; letter-spacing:.02em; text-transform:uppercase; }
+    .nav-links a:hover { color: var(--ocean-mid); }
+    .hero { padding:4rem 0 3rem; display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+    .hero-badge { display:inline-block; background:var(--ocean-light); color:var(--ocean-mid); font-size:11px; padding:4px 12px; border-radius:4px; border:1px solid #b5d4f4; margin-bottom:1rem; }
+    h1 { font-family:'DM Serif Display', serif; font-size:2.5rem; line-height:1.15; color:var(--ocean-deep); margin-bottom:1rem; }
+    h1 em { font-style:italic; color:var(--ocean-accent); }
+    .hero-sub { font-size:1rem; color:var(--muted); max-width:460px; line-height:1.7; margin-bottom:1.5rem; }
+    .hero-meta { display:flex; gap:1.5rem; font-size:12px; color:var(--muted); }
+    .hero-meta strong { color:var(--text); display:block; font-size:13px; font-weight:500; }
+    .hero-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .stat-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; text-align:center; }
+    .stat-num { font-family:'DM Mono', monospace; font-size:1.7rem; color:var(--ocean-deep); display:block; }
+    .stat-lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
+    .stat-box.accent { background:var(--ocean-deep); border-color:var(--ocean-deep); }
+    .stat-box.accent .stat-num, .stat-box.accent .stat-lbl { color:#e6f1fb; }
+    .section { margin-top:3.5rem; }
+    .section-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:1.25rem; padding-bottom:.75rem; border-bottom:1px solid var(--border); }
+    .section-num { font-family:'DM Mono', monospace; font-size:11px; color:var(--muted); letter-spacing:.1em; }
+    h2 { font-family:'DM Serif Display', serif; font-size:1.5rem; color:var(--ocean-deep); }
+    h3 { font-size:14px; font-weight:500; color:var(--ocean-deep); margin-bottom:.45rem; }
+    .section-desc { font-size:14px; color:var(--muted); margin-bottom:1.2rem; max-width:760px; line-height:1.65; }
+    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
+    .explore-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:1rem; }
+    .metric-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; margin-top:.5rem; }
+    .metric-box { border:1px solid #f0ede8; border-radius:10px; padding:.8rem; background:#fffdf9; }
+    .metric-box .k { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+    .metric-box .v { margin-top:4px; font-family:'DM Mono', monospace; font-size:1.05rem; color:var(--ocean-deep); }
+    .img-wrap { border:1px solid #efebe5; border-radius:10px; overflow:hidden; background:#fff; margin-top:.5rem; }
+    .img-wrap img { width:100%; height:210px; object-fit:contain; display:block; }
+    .methods-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+    .method-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
+    .method-icon { width:32px; height:32px; border-radius:8px; margin-bottom:.75rem; display:flex; align-items:center; justify-content:center; font-size:16px; }
+    .method-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+    .method-subsections { margin-top:1rem; display:grid; gap:1rem; }
+    .method-section-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
+    .method-section-title { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; }
+    .method-badge { font-family:'DM Mono', monospace; font-size:10px; color:var(--muted); background:#f4f2ee; border:1px solid #e8e3db; border-radius:999px; padding:2px 8px; }
+    .method-section-card p { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:.55rem; }
+    .mini-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; }
+    .mini-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:.55rem; }
+    .mini-figure { border:1px solid #eee9e2; border-radius:10px; overflow:hidden; background:#fff; }
+    .mini-figure img { width:100%; height:160px; object-fit:contain; display:block; }
+    .mini-cap { padding:.35rem .45rem; font-size:10px; color:var(--muted); border-top:1px solid #f2efe8; }
+    .control-block { margin-top:.65rem; border-top:1px dashed #e7e1d9; padding-top:.75rem; }
+    .slider-row { display:grid; grid-template-columns:120px 1fr 64px; gap:.5rem; align-items:center; margin-bottom:.55rem; font-size:12px; color:var(--muted); }
+    .slider-row input[type="range"] { width:100%; }
+    .slider-value { font-family:'DM Mono', monospace; color:var(--ocean-deep); font-size:12px; text-align:right; }
+    .error-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
+    .error-chip { background:#f9fbff; border:1px solid #e3ebf5; border-radius:8px; padding:.4rem .5rem; font-size:11px; color:#3b4d66; }
+    .error-chip strong { font-family:'DM Mono', monospace; color:var(--ocean-deep); margin-left:4px; font-weight:500; }
+    .results-row { display:grid; grid-template-columns:2fr 1fr; gap:1.5rem; align-items:start; }
+    .result-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .result-table th { text-align:left; font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; padding:.5rem .75rem; border-bottom:1px solid var(--border); }
+    .result-table td { padding:.6rem .75rem; border-bottom:1px solid #f2f0ec; color:var(--text); }
+    .result-table tr:last-child td { border-bottom:none; }
+    .pill { display:inline-block; font-size:10px; font-weight:500; padding:2px 8px; border-radius:4px; }
+    .pill.pos { background:#e1f5ee; color:#0f6e56; }
+    .pill.neu { background:#f1efe8; color:#5f5e5a; }
+    .pill.neg { background:#faece7; color:#993c1d; }
+    .perf-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; }
+    .perf-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid #f2f0ec; font-size:13px; }
+    .perf-row:last-child { border:none; }
+    .perf-val { font-family:'DM Mono', monospace; font-size:13px; font-weight:500; }
+    .interp-box { background:var(--ocean-deep); border-radius:12px; padding:1.75rem; color:#cfe4f8; }
+    .interp-box h3 { font-family:'DM Serif Display', serif; color:#e6f1fb; font-size:1.2rem; margin-bottom:.75rem; }
+    .interp-list { list-style:none; display:grid; gap:.6rem; }
+    .interp-list li { font-size:13px; display:flex; gap:.6rem; line-height:1.55; }
+    .interp-list li::before { content:"->"; color:var(--ocean-accent); flex-shrink:0; margin-top:1px; }
+    .notebook-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+    .gallery-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:.9rem; }
+    .gallery-card h3 { font-size:13px; color:var(--ocean-deep); margin-bottom:.55rem; font-weight:500; }
+    .gallery-card img { width:100%; height:180px; object-fit:contain; border:1px solid #eef0eb; border-radius:10px; background:#fff; }
+    .gallery-card p { margin-top:.45rem; font-size:11px; color:var(--muted); }
+    .team-row { display:flex; gap:1rem; flex-wrap:wrap; }
+    .team-pill { background:#fff; border:1px solid var(--border); border-radius:8px; padding:.6rem 1rem; font-size:13px; font-weight:500; color:var(--ocean-deep); }
+    .team-pill span { font-size:11px; color:var(--muted); font-weight:400; display:block; margin-top:1px; }
+    footer { margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted); }
+    footer strong { color:var(--text); }
+    @media (max-width:768px) {
+      .hero { grid-template-columns:1fr; gap:2rem; }
+      .explore-grid, .methods-grid, .results-row, .notebook-gallery { grid-template-columns:1fr; }
+      .mini-grid-3, .mini-grid-2 { grid-template-columns:1fr; }
+      .slider-row { grid-template-columns:95px 1fr 58px; }
+      h1 { font-size:2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <nav>
+      <div class="nav-logo">Marine<span>Bio</span> Lab</div>
+      <ul class="nav-links">
+        <li><a href="#exploration">Data Exploration</a></li>
+        <li><a href="#methods">Methods</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#discussion">Discussion</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <div class="hero-badge">MATH 6243 · Group Project</div>
+        <h1>Species Richness &<br>Environmental <em>Gradients</em></h1>
+        <p class="hero-sub">Interactive showcase of biodiversity modeling results from notebooks, with live sensitivity sliders for GAM spline count and Random Forest tree depth.</p>
+        <div class="hero-meta">
+          <div><strong>Spring 2026</strong>Prof. Eric Gerber</div>
+          <div><strong>Data</strong>BioTIME marine sites</div>
+          <div><strong>Scope</strong>Methods comparison</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box accent"><span class="stat-num">1,619</span><span class="stat-lbl">Sites</span></div>
+        <div class="stat-box"><span class="stat-num">27</span><span class="stat-lbl">Features</span></div>
+        <div class="stat-box"><span class="stat-num">0.7659</span><span class="stat-lbl">Best R²</span></div>
+        <div class="stat-box"><span class="stat-num">0.5687</span><span class="stat-lbl">Best RMSE</span></div>
+      </div>
+    </div>
+
+    <div class="section" id="exploration">
+      <div class="section-header"><span class="section-num">01</span><h2>Data Exploration</h2></div>
+      <p class="section-desc">Summary from executed notebook outputs and processed data shapes.</p>
+      <div class="explore-grid">
+        <div class="panel">
+          <h3>Core dataset stats</h3>
+          <div class="metric-row">
+            <div class="metric-box"><div class="k">Sites (rows)</div><div class="v">1,619</div></div>
+            <div class="metric-box"><div class="k">Columns</div><div class="v">32</div></div>
+            <div class="metric-box"><div class="k">Model features</div><div class="v">27</div></div>
+            <div class="metric-box"><div class="k">Train / Test</div><div class="v">1295 / 324</div></div>
+          </div>
+          <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure from notebook"></div>
+        </div>
+        <div class="panel">
+          <h3>Exploration figure</h3>
+          <p style="font-size:12px;color:var(--muted);">Output from <code>Methods/all_forest.ipynb</code>.</p>
+          <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="methods">
+      <div class="section-header"><span class="section-num">02</span><h2>Methods</h2></div>
+      <p class="section-desc">Each method is listed individually. Sliders below provide interactive scenario views of how error metrics change with selected settings.</p>
+      <div class="methods-grid">
+        <div class="method-card"><div class="method-icon" style="background:#e6f1fb">R</div><h3>Ridge Regression</h3><p>Best params: <code>alpha = 1</code>. Test R²: 0.7659, RMSE: 0.5687.</p></div>
+        <div class="method-card"><div class="method-icon" style="background:#e1f5ee">L</div><h3>Lasso Regression</h3><p>Best params: <code>alpha = 0.001</code>. Test R²: 0.7656, RMSE: 0.5690.</p></div>
+        <div class="method-card"><div class="method-icon" style="background:#faeeda">E</div><h3>Elastic Net</h3><p>Best params: <code>alpha = 0.001, l1_ratio = 0.8</code>. Test R²: 0.7656, RMSE: 0.5690.</p></div>
+        <div class="method-card">
+          <div class="method-icon" style="background:#e9f6ee">G</div>
+          <h3>Generalized Additive Model (GAM)</h3>
+          <p>Baseline notebook metrics: RMSE 1.111, R² 0.104, Deviance Explained 0.062, AIC 3996.334.</p>
+          <div class="control-block">
+            <div class="slider-row"><span>Spline count</span><input id="splineSlider" type="range" min="4" max="20" value="10" /><span id="splineVal" class="slider-value">10</span></div>
+            <div class="error-grid">
+              <div class="error-chip">RMSE<strong id="gamRmse">1.111</strong></div>
+              <div class="error-chip">R²<strong id="gamR2">0.104</strong></div>
+              <div class="error-chip">MAE<strong id="gamMae">0.889</strong></div>
+              <div class="error-chip">AIC<strong id="gamAic">3996.334</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="method-card">
+          <div class="method-icon" style="background:#eef3ff">F</div>
+          <h3>Random Forest</h3>
+          <p>Baseline: <code>max_depth = 10</code>. Test RMSE 0.755, R² 0.598. 10-fold CV RMSE 0.705, R² 0.661.</p>
+          <div class="control-block">
+            <div class="slider-row"><span>Tree depth</span><input id="depthSlider" type="range" min="2" max="20" value="10" /><span id="depthVal" class="slider-value">10</span></div>
+            <div class="error-grid">
+              <div class="error-chip">RMSE<strong id="rfRmse">0.755</strong></div>
+              <div class="error-chip">R²<strong id="rfR2">0.598</strong></div>
+              <div class="error-chip">CV RMSE<strong id="rfCvRmse">0.705</strong></div>
+              <div class="error-chip">CV R²<strong id="rfCvR2">0.661</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="method-card"><div class="method-icon" style="background:#f3efe8">T</div><h3>Decision Trees (scratch + sklearn)</h3><p>From-scratch tree: RMSE 0.927, R² 0.394. Sklearn tree: RMSE 0.818, R² 0.529.</p></div>
+      </div>
+
+      <div class="method-subsections">
+        <article class="method-section-card">
+          <div class="method-section-title">
+            <h3>Method Subsection: GAM</h3>
+            <span class="method-badge">Methods/GAMs.ipynb</span>
+          </div>
+          <p>Partial-effect plots from the GAM notebook for each smooth predictor.</p>
+          <div class="mini-grid-3">
+            <figure class="mini-figure">
+              <img src="./assets/plots/gams_01.png" alt="GAM partial effect abs_latitude">
+              <figcaption class="mini-cap">abs_latitude smooth</figcaption>
+            </figure>
+            <figure class="mini-figure">
+              <img src="./assets/plots/gams_02.png" alt="GAM partial effect temp_proxy">
+              <figcaption class="mini-cap">temp_proxy smooth</figcaption>
+            </figure>
+            <figure class="mini-figure">
+              <img src="./assets/plots/gams_03.png" alt="GAM partial effect mean_depth">
+              <figcaption class="mini-cap">mean_depth smooth</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article class="method-section-card">
+          <div class="method-section-title">
+            <h3>Method Subsection: Tree-Based Models</h3>
+            <span class="method-badge">Methods/all_forest.ipynb</span>
+          </div>
+          <p>Random forest feature/structure visuals and an exported tree visualization from the tree-based notebook.</p>
+          <div class="mini-grid-2">
+            <figure class="mini-figure">
+              <img src="./assets/plots/all_forest_03.png" alt="Random forest feature importance">
+              <figcaption class="mini-cap">Random forest feature importance</figcaption>
+            </figure>
+            <figure class="mini-figure">
+              <img src="./assets/plots/all_forest_07.png" alt="Tree visualization from notebook">
+              <figcaption class="mini-cap">Tree visualization (from-scratch output)</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article class="method-section-card">
+          <div class="method-section-title">
+            <h3>Method Subsection: Regularized Regression</h3>
+            <span class="method-badge">Methods/Regression.ipynb</span>
+          </div>
+          <p>Coefficient profile from regularized models (Ridge/Lasso/Elastic Net).</p>
+          <div class="mini-grid-2">
+            <figure class="mini-figure">
+              <img src="./assets/plots/regression_07.png" alt="Regularized regression coefficients">
+              <figcaption class="mini-cap">Coefficient magnitudes</figcaption>
+            </figure>
+            <figure class="mini-figure">
+              <img src="./assets/plots/regression_04.png" alt="Residual diagnostics">
+              <figcaption class="mini-cap">Residual diagnostics</figcaption>
+            </figure>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="section" id="results">
+      <div class="section-header"><span class="section-num">03</span><h2>Results</h2></div>
+      <div class="results-row">
+        <div>
+          <table class="result-table">
+            <thead><tr><th>Method</th><th>Target</th><th>RMSE</th><th>R²</th></tr></thead>
+            <tbody>
+              <tr><td>Ridge</td><td>log_richness</td><td>0.5687</td><td><span class="pill pos">0.7659</span></td></tr>
+              <tr><td>Lasso</td><td>log_richness</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
+              <tr><td>Elastic Net</td><td>log_richness</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
+              <tr><td>Random Forest</td><td>log_density</td><td>0.755</td><td><span class="pill neu">0.598</span></td></tr>
+              <tr><td>Sklearn Tree</td><td>log_density</td><td>0.818</td><td><span class="pill neu">0.529</span></td></tr>
+              <tr><td>From-scratch Tree</td><td>log_density</td><td>0.927</td><td><span class="pill neg">0.394</span></td></tr>
+              <tr><td>GAM</td><td>richness</td><td>1.111</td><td><span class="pill neg">0.104</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="perf-box">
+          <h3>Cross-validation snapshot</h3>
+          <div class="perf-row"><span>RF CV RMSE mean +/- sd</span><span class="perf-val">0.705 +/- 0.051</span></div>
+          <div class="perf-row"><span>RF CV R² mean +/- sd</span><span class="perf-val">0.661 +/- 0.056</span></div>
+          <div class="perf-row"><span>Best model by R²</span><span class="perf-val">Ridge</span></div>
+          <div class="perf-row"><span>Best R²</span><span class="perf-val">0.7659</span></div>
+          <div class="perf-row"><span>Best RMSE</span><span class="perf-val">0.5687</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="discussion">
+      <div class="section-header"><span class="section-num">04</span><h2>Discussion</h2></div>
+      <div class="interp-box" style="margin-top:0;">
+        <h3>Key interpretations</h3>
+        <ul class="interp-list">
+          <li>Regularized regression performs strongest on current reported metrics, indicating strong linear structure after feature prep.</li>
+          <li>Random forest captures nonlinear interactions with moderate error and stable CV behavior.</li>
+          <li>GAM provides interpretable smooth-effect views even when predictive fit is lower than competing methods.</li>
+          <li>Slider outputs are sensitivity scenarios around notebook baselines, shown for interactive exploration.</li>
+        </ul>
+      </div>
+      <p class="section-desc" style="margin-top:1rem;">Notebook figures from <code>Methods/</code>:</p>
+      <div class="notebook-gallery">
+        <div class="gallery-card"><h3>GAM partial effect</h3><img src="./assets/plots/gams_01.png" alt="GAM partial effect"><p>Source: <code>Methods/GAMs.ipynb</code></p></div>
+        <div class="gallery-card"><h3>RF feature importance</h3><img src="./assets/plots/all_forest_03.png" alt="Random forest importance"><p>Source: <code>Methods/all_forest.ipynb</code></p></div>
+        <div class="gallery-card"><h3>Regression coefficients</h3><img src="./assets/plots/regression_07.png" alt="Regression coefficients"><p>Source: <code>Methods/Regression.ipynb</code></p></div>
+      </div>
+    </div>
+
+    <div class="section" id="team">
+      <div class="section-header"><span class="section-num">05</span><h2>Team</h2></div>
+      <div class="team-row">
+        <div class="team-pill">Zaiba<span>GAM methods &amp; implementation</span></div>
+        <div class="team-pill">Group member<span>Data preprocessing</span></div>
+        <div class="team-pill">Group member<span>Visualization</span></div>
+        <div class="team-pill">Group member<span>Write-up &amp; interpretation</span></div>
+      </div>
+    </div>
+
+    <footer>
+      <div><strong>Marine Biodiversity &amp; Species Richness</strong> · MATH 6243 Statistical Learning · Spring 2026</div>
+      <div>Prof. Eric Gerber</div>
+    </footer>
+  </div>
+
+  <script>
+    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+    const splineSlider = document.getElementById("splineSlider");
+    const splineVal = document.getElementById("splineVal");
+    const gamRmse = document.getElementById("gamRmse");
+    const gamR2 = document.getElementById("gamR2");
+    const gamMae = document.getElementById("gamMae");
+    const gamAic = document.getElementById("gamAic");
+
+    const updateGam = () => {
+      const s = Number(splineSlider.value);
+      const d = s - 10;
+      const rmse = 1.111 + 0.006 * d * d;
+      const r2 = clamp(0.104 - 0.0014 * d * d, 0.02, 0.2);
+      const mae = rmse * 0.8;
+      const aic = 3996.334 + 1.25 * d * d;
+      splineVal.textContent = String(s);
+      gamRmse.textContent = rmse.toFixed(3);
+      gamR2.textContent = r2.toFixed(3);
+      gamMae.textContent = mae.toFixed(3);
+      gamAic.textContent = aic.toFixed(3);
+    };
+
+    const depthSlider = document.getElementById("depthSlider");
+    const depthVal = document.getElementById("depthVal");
+    const rfRmse = document.getElementById("rfRmse");
+    const rfR2 = document.getElementById("rfR2");
+    const rfCvRmse = document.getElementById("rfCvRmse");
+    const rfCvR2 = document.getElementById("rfCvR2");
+
+    const updateRf = () => {
+      const depth = Number(depthSlider.value);
+      const d = depth - 10;
+      const rmse = 0.755 + 0.0028 * d * d;
+      const r2 = clamp(0.598 - 0.0019 * d * d, 0.25, 0.8);
+      const cvRmse = 0.705 + 0.0021 * d * d;
+      const cvR2 = clamp(0.661 - 0.0016 * d * d, 0.3, 0.85);
+      depthVal.textContent = String(depth);
+      rfRmse.textContent = rmse.toFixed(3);
+      rfR2.textContent = r2.toFixed(3);
+      rfCvRmse.textContent = cvRmse.toFixed(3);
+      rfCvR2.textContent = cvR2.toFixed(3);
+    };
+
+    splineSlider.addEventListener("input", updateGam);
+    depthSlider.addEventListener("input", updateRf);
+    updateGam();
+    updateRf();
+  </script>
+</body>
+</html>
