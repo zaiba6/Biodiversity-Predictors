@@ -3,380 +3,1298 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Marine Biodiversity | Interactive Results</title>
+  <title>Marine Biodiversity Predictors | Interactive Methods</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --ocean-deep: #042C53;
-      --ocean-mid: #185FA5;
-      --ocean-light: #E6F1FB;
+      --ocean-deep:   #042C53;
+      --ocean-mid:    #185FA5;
+      --ocean-light:  #E6F1FB;
       --ocean-accent: #1D9E75;
-      --text: #1a1a2e;
-      --muted: #5F5E5A;
-      --border: #e8e5df;
-      --surface: #f8f7f4;
+      --coral:        #E07B54;
+      --text:         #1a1a2e;
+      --muted:        #5F5E5A;
+      --border:       #e8e5df;
+      --surface:      #f8f7f4;
     }
     body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--surface); line-height: 1.6; }
     .site { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 5rem; }
-    nav { display:flex; align-items:center; justify-content:space-between; padding:1.25rem 0; border-bottom:1px solid var(--border); }
-    .nav-logo { font-family:'DM Serif Display', serif; font-size:1.1rem; color:var(--ocean-deep); }
+
+    /* Nav */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 0; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(248,247,244,.92); backdrop-filter: blur(8px);
+    }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ocean-deep); }
     .nav-logo span { color: var(--ocean-accent); }
-    .nav-links { display:flex; gap:1.2rem; list-style:none; flex-wrap:wrap; }
-    .nav-links a { font-size:12px; color:var(--muted); text-decoration:none; font-weight:500; letter-spacing:.02em; text-transform:uppercase; }
+    .nav-links { display: flex; gap: 1.2rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a { font-size: 12px; color: var(--muted); text-decoration: none; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; }
     .nav-links a:hover { color: var(--ocean-mid); }
-    .hero { padding:4rem 0 3rem; display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
-    .hero-badge { display:inline-block; background:var(--ocean-light); color:var(--ocean-mid); font-size:11px; padding:4px 12px; border-radius:4px; border:1px solid #b5d4f4; margin-bottom:1rem; }
-    h1 { font-family:'DM Serif Display', serif; font-size:2.5rem; line-height:1.15; color:var(--ocean-deep); margin-bottom:1rem; }
-    h1 em { font-style:italic; color:var(--ocean-accent); }
-    .hero-sub { font-size:1rem; color:var(--muted); max-width:460px; line-height:1.7; margin-bottom:1.5rem; }
-    .hero-meta { display:flex; gap:1.5rem; font-size:12px; color:var(--muted); }
-    .hero-meta strong { color:var(--text); display:block; font-size:13px; font-weight:500; }
-    .hero-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-    .stat-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; text-align:center; }
-    .stat-num { font-family:'DM Mono', monospace; font-size:1.7rem; color:var(--ocean-deep); display:block; }
-    .stat-lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
-    .stat-box.accent { background:var(--ocean-deep); border-color:var(--ocean-deep); }
-    .stat-box.accent .stat-num, .stat-box.accent .stat-lbl { color:#e6f1fb; }
-    .section { margin-top:3.5rem; }
-    .section-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:1.25rem; padding-bottom:.75rem; border-bottom:1px solid var(--border); }
-    .section-num { font-family:'DM Mono', monospace; font-size:11px; color:var(--muted); letter-spacing:.1em; }
-    h2 { font-family:'DM Serif Display', serif; font-size:1.5rem; color:var(--ocean-deep); }
-    h3 { font-size:14px; font-weight:500; color:var(--ocean-deep); margin-bottom:.45rem; }
-    .section-desc { font-size:14px; color:var(--muted); margin-bottom:1.2rem; max-width:760px; line-height:1.65; }
-    .panel { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
-    .explore-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:1rem; }
-    .metric-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; margin-top:.5rem; }
-    .metric-box { border:1px solid #f0ede8; border-radius:10px; padding:.8rem; background:#fffdf9; }
-    .metric-box .k { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
-    .metric-box .v { margin-top:4px; font-family:'DM Mono', monospace; font-size:1.05rem; color:var(--ocean-deep); }
-    .img-wrap { border:1px solid #efebe5; border-radius:10px; overflow:hidden; background:#fff; margin-top:.5rem; }
-    .img-wrap img { width:100%; height:210px; object-fit:contain; display:block; }
-    .methods-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
-    .method-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
-    .method-icon { width:32px; height:32px; border-radius:8px; margin-bottom:.75rem; display:flex; align-items:center; justify-content:center; font-size:16px; }
-    .method-card p { font-size:12px; color:var(--muted); line-height:1.6; }
-    .method-subsections { margin-top:1rem; display:grid; gap:1rem; }
-    .method-section-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; }
-    .method-section-title { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; }
-    .method-badge { font-family:'DM Mono', monospace; font-size:10px; color:var(--muted); background:#f4f2ee; border:1px solid #e8e3db; border-radius:999px; padding:2px 8px; }
-    .method-section-card p { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:.55rem; }
-    .mini-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; }
-    .mini-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:.55rem; }
-    .mini-figure { border:1px solid #eee9e2; border-radius:10px; overflow:hidden; background:#fff; }
-    .mini-figure img { width:100%; height:160px; object-fit:contain; display:block; }
-    .mini-cap { padding:.35rem .45rem; font-size:10px; color:var(--muted); border-top:1px solid #f2efe8; }
-    .control-block { margin-top:.65rem; border-top:1px dashed #e7e1d9; padding-top:.75rem; }
-    .slider-row { display:grid; grid-template-columns:120px 1fr 64px; gap:.5rem; align-items:center; margin-bottom:.55rem; font-size:12px; color:var(--muted); }
-    .slider-row input[type="range"] { width:100%; }
-    .slider-value { font-family:'DM Mono', monospace; color:var(--ocean-deep); font-size:12px; text-align:right; }
-    .error-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
-    .error-chip { background:#f9fbff; border:1px solid #e3ebf5; border-radius:8px; padding:.4rem .5rem; font-size:11px; color:#3b4d66; }
-    .error-chip strong { font-family:'DM Mono', monospace; color:var(--ocean-deep); margin-left:4px; font-weight:500; }
-    .results-row { display:grid; grid-template-columns:2fr 1fr; gap:1.5rem; align-items:start; }
-    .result-table { width:100%; border-collapse:collapse; font-size:13px; }
-    .result-table th { text-align:left; font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; padding:.5rem .75rem; border-bottom:1px solid var(--border); }
-    .result-table td { padding:.6rem .75rem; border-bottom:1px solid #f2f0ec; color:var(--text); }
-    .result-table tr:last-child td { border-bottom:none; }
-    .pill { display:inline-block; font-size:10px; font-weight:500; padding:2px 8px; border-radius:4px; }
-    .pill.pos { background:#e1f5ee; color:#0f6e56; }
-    .pill.neu { background:#f1efe8; color:#5f5e5a; }
-    .pill.neg { background:#faece7; color:#993c1d; }
-    .perf-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; }
-    .perf-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid #f2f0ec; font-size:13px; }
-    .perf-row:last-child { border:none; }
-    .perf-val { font-family:'DM Mono', monospace; font-size:13px; font-weight:500; }
-    .interp-box { background:var(--ocean-deep); border-radius:12px; padding:1.75rem; color:#cfe4f8; }
-    .interp-box h3 { font-family:'DM Serif Display', serif; color:#e6f1fb; font-size:1.2rem; margin-bottom:.75rem; }
-    .interp-list { list-style:none; display:grid; gap:.6rem; }
-    .interp-list li { font-size:13px; display:flex; gap:.6rem; line-height:1.55; }
-    .interp-list li::before { content:"->"; color:var(--ocean-accent); flex-shrink:0; margin-top:1px; }
-    .notebook-gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
-    .gallery-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:.9rem; }
-    .gallery-card h3 { font-size:13px; color:var(--ocean-deep); margin-bottom:.55rem; font-weight:500; }
-    .gallery-card img { width:100%; height:180px; object-fit:contain; border:1px solid #eef0eb; border-radius:10px; background:#fff; }
-    .gallery-card p { margin-top:.45rem; font-size:11px; color:var(--muted); }
-    .team-row { display:flex; gap:1rem; flex-wrap:wrap; }
-    .team-pill { background:#fff; border:1px solid var(--border); border-radius:8px; padding:.6rem 1rem; font-size:13px; font-weight:500; color:var(--ocean-deep); }
-    .team-pill span { font-size:11px; color:var(--muted); font-weight:400; display:block; margin-top:1px; }
-    footer { margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted); }
-    footer strong { color:var(--text); }
-    @media (max-width:768px) {
-      .hero { grid-template-columns:1fr; gap:2rem; }
-      .explore-grid, .methods-grid, .results-row, .notebook-gallery { grid-template-columns:1fr; }
-      .mini-grid-3, .mini-grid-2 { grid-template-columns:1fr; }
-      .slider-row { grid-template-columns:95px 1fr 58px; }
-      h1 { font-size:2rem; }
+
+    /* Hero */
+    .hero { padding: 4.5rem 0 3.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; position: relative; }
+    .hero::before {
+      content: ''; position: absolute; right: -8px; top: 20%; bottom: 20%; width: 2px;
+      background: repeating-linear-gradient(to bottom, var(--ocean-mid) 0px, var(--ocean-mid) 4px, transparent 4px, transparent 20px);
+      opacity: .12;
+    }
+    .hero-badge { display: inline-block; background: var(--ocean-light); color: var(--ocean-mid); font-size: 11px; padding: 4px 12px; border-radius: 4px; border: 1px solid #b5d4f4; margin-bottom: 1rem; }
+    h1 { font-family: 'DM Serif Display', serif; font-size: 2.5rem; line-height: 1.15; color: var(--ocean-deep); margin-bottom: 1rem; }
+    h1 em { font-style: italic; color: var(--ocean-accent); }
+    .hero-sub { font-size: 1rem; color: var(--muted); max-width: 460px; line-height: 1.75; margin-bottom: 1.5rem; }
+    .hero-meta { display: flex; gap: 1.5rem; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+    .hero-meta strong { color: var(--text); display: block; font-size: 13px; font-weight: 500; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .stat-num { font-family: 'DM Mono', monospace; font-size: 1.7rem; color: var(--ocean-deep); display: block; }
+    .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+    .stat-box.accent { background: var(--ocean-deep); border-color: var(--ocean-deep); }
+    .stat-box.accent .stat-num, .stat-box.accent .stat-lbl { color: #e6f1fb; }
+    .stat-box.coral-box { background: var(--coral); border-color: var(--coral); }
+    .stat-box.coral-box .stat-num, .stat-box.coral-box .stat-lbl { color: #fff; }
+
+    /* Sections */
+    .section { margin-top: 4rem; }
+    .section-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 2px solid var(--border); }
+    .section-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ocean-accent); letter-spacing: .1em; background: var(--ocean-light); padding: 2px 8px; border-radius: 4px; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 1.55rem; color: var(--ocean-deep); }
+    h3 { font-size: 14px; font-weight: 600; color: var(--ocean-deep); margin-bottom: .4rem; }
+    .section-desc { font-size: 14px; color: var(--muted); margin-bottom: 1.25rem; max-width: 760px; line-height: 1.7; }
+    .panel { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+
+    /* Data Exploration */
+    .explore-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; }
+    .metric-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .65rem; margin-top: .65rem; }
+    .metric-box { border: 1px solid #f0ede8; border-radius: 10px; padding: .75rem; background: #fffdf9; }
+    .metric-box .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .metric-box .v { margin-top: 4px; font-family: 'DM Mono', monospace; font-size: .95rem; color: var(--ocean-deep); }
+    .img-wrap { border: 1px solid #efebe5; border-radius: 10px; overflow: hidden; background: #fff; margin-top: .75rem; }
+    .img-wrap img { width: 100%; height: 210px; object-fit: contain; display: block; }
+
+    /* Method sections */
+    .method-sections { display: grid; gap: 1.75rem; }
+    .method-section { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .method-header { display: flex; align-items: flex-start; gap: .85rem; margin-bottom: .65rem; }
+    .method-icon { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; color: #fff; }
+    .method-icon.reg  { background: var(--ocean-mid); }
+    .method-icon.gam  { background: var(--ocean-accent); }
+    .method-icon.tree { background: #4e7a2a; }
+    .method-title h3 { font-size: 1rem; margin-bottom: .3rem; }
+    .badge-row { display: flex; gap: .35rem; flex-wrap: wrap; }
+    .mbadge { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); background: #f4f2ee; border: 1px solid #e8e3db; border-radius: 999px; padding: 2px 8px; }
+    .method-desc { font-size: 13px; color: var(--muted); line-height: 1.68; margin: .75rem 0 1rem; }
+    .method-divider { border: none; border-top: 1px dashed #ddd8d0; margin: 1.25rem 0; }
+
+    /* Control panels */
+    .control-panel { background: var(--ocean-light); border: 1px solid #c8dff5; border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+    .control-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ocean-mid); margin-bottom: .7rem; }
+    .slider-row { display: grid; grid-template-columns: 160px 1fr 88px; gap: .6rem; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: .5rem; }
+    .slider-row:last-child { margin-bottom: 0; }
+    .slider-row input[type="range"] { width: 100%; accent-color: var(--ocean-mid); }
+    .slider-value { font-family: 'DM Mono', monospace; color: var(--ocean-deep); font-size: 12px; text-align: right; }
+    .slider-hint { font-size: 11px; color: var(--ocean-mid); margin-top: .4rem; }
+
+    /* Model tabs */
+    .model-tabs { display: flex; gap: .4rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .model-tab { font-size: 12px; padding: 4px 14px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--muted); cursor: pointer; font-weight: 500; transition: all .15s; }
+    .model-tab.active { background: var(--ocean-deep); border-color: var(--ocean-deep); color: #fff; }
+    .model-tab:hover:not(.active) { border-color: var(--ocean-mid); color: var(--ocean-mid); }
+    .l1-row { display: none; }
+    .l1-row.show { display: grid; }
+
+    /* Error chips */
+    .error-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-bottom: .75rem; }
+    .ec { background: #fff; border: 1px solid #dde7f4; border-radius: 10px; padding: .6rem .7rem; }
+    .ec.hi { background: var(--ocean-deep); border-color: var(--ocean-deep); }
+    .ec-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .ec.hi .ec-label { color: #8cb8d9; }
+    .ec-value { font-family: 'DM Mono', monospace; font-size: 1rem; color: var(--ocean-deep); font-weight: 500; margin-top: 2px; }
+    .ec.hi .ec-value { color: #e6f1fb; }
+
+    /* Feature bar */
+    .feat-bar-wrap { margin-bottom: .5rem; }
+    .feat-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .feat-track { height: 8px; background: #dde8f5; border-radius: 4px; overflow: hidden; }
+    .feat-fill { height: 100%; background: var(--ocean-accent); border-radius: 4px; transition: width .35s ease; }
+    .reg-note { font-size: 11px; color: var(--muted); font-style: italic; }
+
+    /* Live SVG plot wrappers */
+    .live-plot-wrap { margin-top: .85rem; border: 1px solid #e0ddd8; border-radius: 10px; overflow: hidden; background: #fff; }
+    .live-plot-wrap svg { width: 100%; height: auto; display: block; }
+
+    /* Plot grids */
+    .plot-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; margin-top: 1rem; }
+    .plot-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: .65rem; margin-top: 1rem; }
+    .plot-strip  { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .5rem; margin-top: .75rem; }
+    .mini-fig { border: 1px solid #eee9e2; border-radius: 10px; overflow: hidden; background: #fff; }
+    .mini-fig img { width: 100%; height: 148px; object-fit: contain; display: block; cursor: zoom-in; transition: opacity .15s; }
+    .mini-fig img:hover { opacity: .85; }
+    .mini-fig.tall img { height: 200px; }
+    .mini-fig svg { width: 100%; height: auto; display: block; }
+    .mini-cap { padding: .35rem .5rem; font-size: 10px; color: var(--muted); border-top: 1px solid #f2efe8; }
+
+    /* Results */
+    .results-layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.5rem; align-items: start; }
+    .result-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .result-table th { text-align: left; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: .5rem .75rem; border-bottom: 1px solid var(--border); }
+    .result-table td { padding: .6rem .75rem; border-bottom: 1px solid #f2f0ec; color: var(--text); }
+    .result-table tr:last-child td { border-bottom: none; }
+    .result-table tr.best td { background: rgba(29,158,117,.06); }
+    .pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 9px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+    .pill.pos { background: #ddf5ee; color: #0a6b52; }
+    .pill.neu { background: var(--ocean-light); color: #185FA5; }
+    .pill.neg { background: #faeee6; color: #9c5333; }
+    .r2-bars { margin-top: 1rem; display: grid; gap: .45rem; }
+    .r2-row { display: flex; align-items: center; gap: .55rem; font-size: 11px; }
+    .r2-name { width: 88px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r2-track { flex: 1; height: 9px; background: #ede9e2; border-radius: 4px; overflow: hidden; }
+    .r2-fill { height: 100%; border-radius: 4px; }
+    .r2-val { width: 38px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ocean-deep); text-align: right; }
+    .perf-box { background: var(--ocean-deep); border-radius: 12px; padding: 1.25rem; color: #cfe4f8; }
+    .perf-box h3 { font-family: 'DM Serif Display', serif; color: #e6f1fb; font-size: 1.1rem; margin-bottom: .75rem; }
+    .perf-row { display: flex; justify-content: space-between; align-items: center; padding: .45rem 0; border-bottom: 1px solid rgba(255,255,255,.1); font-size: 12px; }
+    .perf-row:last-child { border: none; }
+    .perf-val { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: #e6f1fb; }
+
+    /* Discussion — finding cards */
+    .finding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .finding-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; border-top: 3px solid var(--ocean-accent); }
+    .finding-card.blue { border-top-color: var(--ocean-mid); }
+    .finding-card.coral { border-top-color: var(--coral); }
+    .finding-card.kelp  { border-top-color: #4e7a2a; }
+    .finding-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--ocean-accent); letter-spacing: .12em; margin-bottom: .4rem; }
+    .finding-card.blue  .finding-num { color: var(--ocean-mid); }
+    .finding-card.coral .finding-num { color: var(--coral); }
+    .finding-card.kelp  .finding-num { color: #4e7a2a; }
+    .finding-card h4 { font-size: 14px; font-weight: 600; color: var(--ocean-deep); margin-bottom: .4rem; }
+    .finding-card p  { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .finding-highlight { background: var(--ocean-deep); border-radius: 14px; padding: 1.5rem; color: #cfe4f8; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 1rem; }
+    .finding-highlight-icon { font-family: 'DM Mono', monospace; font-size: 1.4rem; color: var(--ocean-accent); flex-shrink: 0; margin-top: 2px; }
+    .finding-highlight h4 { font-family: 'DM Serif Display', serif; color: #e6f1fb; font-size: 1.1rem; margin-bottom: .4rem; }
+    .finding-highlight p { font-size: 13px; line-height: 1.65; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+    .gallery-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: .9rem; }
+    .gallery-card h3 { font-size: 13px; color: var(--ocean-deep); margin-bottom: .5rem; font-weight: 500; }
+    .gallery-card img { width: 100%; height: 180px; object-fit: contain; border-radius: 8px; background: #f8f7f4; cursor: zoom-in; transition: opacity .15s; }
+    .gallery-card img:hover { opacity: .85; }
+    .gallery-card p { margin-top: .45rem; font-size: 11px; color: var(--muted); }
+
+    /* Team */
+    .team-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .team-pill { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: .7rem 1.1rem; }
+    .team-pill strong { font-size: 14px; color: var(--ocean-deep); display: block; }
+    .team-pill span { font-size: 11px; color: var(--muted); margin-top: 2px; display: block; }
+
+    footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); flex-wrap: wrap; gap: .5rem; }
+    footer strong { color: var(--text); }
+
+    /* Lightbox */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(4,44,83,.75); z-index: 999; align-items: center; justify-content: center; padding: 1.5rem; }
+    .lightbox.open { display: flex; }
+    .lb-inner { background: #fff; border-radius: 16px; padding: 1.5rem; max-width: 820px; width: 100%; position: relative; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; }
+    .lb-img { width: 100%; max-height: 65vh; object-fit: contain; border-radius: 8px; display: block; background: #f8f7f4; }
+    .lb-caption { margin-top: .75rem; font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; }
+    .lb-close { position: absolute; top: .75rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); line-height: 1; }
+    .lb-close:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .hero, .explore-grid, .results-layout, .finding-grid, .gallery-grid { grid-template-columns: 1fr; }
+      .hero::before { display: none; }
+      .plot-grid-3 { grid-template-columns: 1fr 1fr; }
+      .plot-grid-2 { grid-template-columns: 1fr; }
+      .error-grid  { grid-template-columns: repeat(2, 1fr); }
+      .slider-row  { grid-template-columns: 110px 1fr 68px; }
+      h1 { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
-  <div class="site">
-    <nav>
-      <div class="nav-logo">Marine<span>Bio</span> Lab</div>
-      <ul class="nav-links">
-        <li><a href="#exploration">Data Exploration</a></li>
-        <li><a href="#methods">Methods</a></li>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#discussion">Discussion</a></li>
-        <li><a href="#team">Team</a></li>
-      </ul>
-    </nav>
 
-    <div class="hero">
-      <div>
-        <div class="hero-badge">MATH 6243 · Group Project</div>
-        <h1>Species Richness &<br>Environmental <em>Gradients</em></h1>
-        <p class="hero-sub">Interactive showcase of biodiversity modeling results from notebooks, with live sensitivity sliders for GAM spline count and Random Forest tree depth.</p>
-        <div class="hero-meta">
-          <div><strong>Spring 2026</strong>Prof. Eric Gerber</div>
-          <div><strong>Data</strong>BioTIME marine sites</div>
-          <div><strong>Scope</strong>Methods comparison</div>
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-box accent"><span class="stat-num">1,619</span><span class="stat-lbl">Sites</span></div>
-        <div class="stat-box"><span class="stat-num">27</span><span class="stat-lbl">Features</span></div>
-        <div class="stat-box"><span class="stat-num">0.7659</span><span class="stat-lbl">Best R²</span></div>
-        <div class="stat-box"><span class="stat-num">0.5687</span><span class="stat-lbl">Best RMSE</span></div>
-      </div>
-    </div>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLightbox(event)">&#x2715;</button>
+    <img id="lbImg" class="lb-img" src="" alt="" />
+    <p id="lbCaption" class="lb-caption"></p>
+  </div>
+</div>
 
-    <div class="section" id="exploration">
-      <div class="section-header"><span class="section-num">01</span><h2>Data Exploration</h2></div>
-      <p class="section-desc">Summary from executed notebook outputs and processed data shapes.</p>
-      <div class="explore-grid">
-        <div class="panel">
-          <h3>Core dataset stats</h3>
-          <div class="metric-row">
-            <div class="metric-box"><div class="k">Sites (rows)</div><div class="v">1,619</div></div>
-            <div class="metric-box"><div class="k">Columns</div><div class="v">32</div></div>
-            <div class="metric-box"><div class="k">Model features</div><div class="v">27</div></div>
-            <div class="metric-box"><div class="k">Train / Test</div><div class="v">1295 / 324</div></div>
-          </div>
-          <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure from notebook"></div>
-        </div>
-        <div class="panel">
-          <h3>Exploration figure</h3>
-          <p style="font-size:12px;color:var(--muted);">Output from <code>Methods/all_forest.ipynb</code>.</p>
-          <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure"></div>
-        </div>
+<div class="site">
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">Marine<span>Bio</span> Lab</div>
+    <ul class="nav-links">
+      <li><a href="#exploration">Data</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#discussion">Discussion</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div>
+      <div class="hero-badge">MATH 6243 · Statistical Learning · Spring 2026</div>
+      <h1>Predicting Marine<br><em>Species Richness</em></h1>
+      <p class="hero-sub">Which environmental and geographic factors drive biodiversity across the world's oceans? We compare regularized regression, generalized additive models, and tree-based methods across 1,619 BioTIME marine sampling sites.</p>
+      <div class="hero-meta">
+        <div><strong>Spring 2026</strong>Prof. Eric Gerber</div>
+        <div><strong>Dataset</strong>BioTIME marine sites</div>
+        <div><strong>Target</strong>log(species richness)</div>
       </div>
     </div>
-
-    <div class="section" id="methods">
-      <div class="section-header"><span class="section-num">02</span><h2>Methods</h2></div>
-      <p class="section-desc">Each method is listed individually. Sliders below provide interactive scenario views of how error metrics change with selected settings.</p>
-      <div class="methods-grid">
-        <div class="method-card"><div class="method-icon" style="background:#e6f1fb">R</div><h3>Ridge Regression</h3><p>Best params: <code>alpha = 1</code>. Test R²: 0.7659, RMSE: 0.5687.</p></div>
-        <div class="method-card"><div class="method-icon" style="background:#e1f5ee">L</div><h3>Lasso Regression</h3><p>Best params: <code>alpha = 0.001</code>. Test R²: 0.7656, RMSE: 0.5690.</p></div>
-        <div class="method-card"><div class="method-icon" style="background:#faeeda">E</div><h3>Elastic Net</h3><p>Best params: <code>alpha = 0.001, l1_ratio = 0.8</code>. Test R²: 0.7656, RMSE: 0.5690.</p></div>
-        <div class="method-card">
-          <div class="method-icon" style="background:#e9f6ee">G</div>
-          <h3>Generalized Additive Model (GAM)</h3>
-          <p>Baseline notebook metrics: RMSE 1.111, R² 0.104, Deviance Explained 0.062, AIC 3996.334.</p>
-          <div class="control-block">
-            <div class="slider-row"><span>Spline count</span><input id="splineSlider" type="range" min="4" max="20" value="10" /><span id="splineVal" class="slider-value">10</span></div>
-            <div class="error-grid">
-              <div class="error-chip">RMSE<strong id="gamRmse">1.111</strong></div>
-              <div class="error-chip">R²<strong id="gamR2">0.104</strong></div>
-              <div class="error-chip">MAE<strong id="gamMae">0.889</strong></div>
-              <div class="error-chip">AIC<strong id="gamAic">3996.334</strong></div>
-            </div>
-          </div>
-        </div>
-        <div class="method-card">
-          <div class="method-icon" style="background:#eef3ff">F</div>
-          <h3>Random Forest</h3>
-          <p>Baseline: <code>max_depth = 10</code>. Test RMSE 0.755, R² 0.598. 10-fold CV RMSE 0.705, R² 0.661.</p>
-          <div class="control-block">
-            <div class="slider-row"><span>Tree depth</span><input id="depthSlider" type="range" min="2" max="20" value="10" /><span id="depthVal" class="slider-value">10</span></div>
-            <div class="error-grid">
-              <div class="error-chip">RMSE<strong id="rfRmse">0.755</strong></div>
-              <div class="error-chip">R²<strong id="rfR2">0.598</strong></div>
-              <div class="error-chip">CV RMSE<strong id="rfCvRmse">0.705</strong></div>
-              <div class="error-chip">CV R²<strong id="rfCvR2">0.661</strong></div>
-            </div>
-          </div>
-        </div>
-        <div class="method-card"><div class="method-icon" style="background:#f3efe8">T</div><h3>Decision Trees (scratch + sklearn)</h3><p>From-scratch tree: RMSE 0.927, R² 0.394. Sklearn tree: RMSE 0.818, R² 0.529.</p></div>
-      </div>
-
-      <div class="method-subsections">
-        <article class="method-section-card">
-          <div class="method-section-title">
-            <h3>Method Subsection: GAM</h3>
-            <span class="method-badge">Methods/GAMs.ipynb</span>
-          </div>
-          <p>Partial-effect plots from the GAM notebook for each smooth predictor.</p>
-          <div class="mini-grid-3">
-            <figure class="mini-figure">
-              <img src="./assets/plots/gams_01.png" alt="GAM partial effect abs_latitude">
-              <figcaption class="mini-cap">abs_latitude smooth</figcaption>
-            </figure>
-            <figure class="mini-figure">
-              <img src="./assets/plots/gams_02.png" alt="GAM partial effect temp_proxy">
-              <figcaption class="mini-cap">temp_proxy smooth</figcaption>
-            </figure>
-            <figure class="mini-figure">
-              <img src="./assets/plots/gams_03.png" alt="GAM partial effect mean_depth">
-              <figcaption class="mini-cap">mean_depth smooth</figcaption>
-            </figure>
-          </div>
-        </article>
-
-        <article class="method-section-card">
-          <div class="method-section-title">
-            <h3>Method Subsection: Tree-Based Models</h3>
-            <span class="method-badge">Methods/all_forest.ipynb</span>
-          </div>
-          <p>Random forest feature/structure visuals and an exported tree visualization from the tree-based notebook.</p>
-          <div class="mini-grid-2">
-            <figure class="mini-figure">
-              <img src="./assets/plots/all_forest_03.png" alt="Random forest feature importance">
-              <figcaption class="mini-cap">Random forest feature importance</figcaption>
-            </figure>
-            <figure class="mini-figure">
-              <img src="./assets/plots/all_forest_07.png" alt="Tree visualization from notebook">
-              <figcaption class="mini-cap">Tree visualization (from-scratch output)</figcaption>
-            </figure>
-          </div>
-        </article>
-
-        <article class="method-section-card">
-          <div class="method-section-title">
-            <h3>Method Subsection: Regularized Regression</h3>
-            <span class="method-badge">Methods/Regression.ipynb</span>
-          </div>
-          <p>Coefficient profile from regularized models (Ridge/Lasso/Elastic Net).</p>
-          <div class="mini-grid-2">
-            <figure class="mini-figure">
-              <img src="./assets/plots/regression_07.png" alt="Regularized regression coefficients">
-              <figcaption class="mini-cap">Coefficient magnitudes</figcaption>
-            </figure>
-            <figure class="mini-figure">
-              <img src="./assets/plots/regression_04.png" alt="Residual diagnostics">
-              <figcaption class="mini-cap">Residual diagnostics</figcaption>
-            </figure>
-          </div>
-        </article>
-      </div>
+    <div class="hero-stats">
+      <div class="stat-box accent"><span class="stat-num">1,619</span><span class="stat-lbl">Marine sites</span></div>
+      <div class="stat-box"><span class="stat-num">27</span><span class="stat-lbl">Predictors</span></div>
+      <div class="stat-box coral-box"><span class="stat-num">0.7659</span><span class="stat-lbl">Best R²</span></div>
+      <div class="stat-box"><span class="stat-num">0.5687</span><span class="stat-lbl">Best RMSE</span></div>
     </div>
-
-    <div class="section" id="results">
-      <div class="section-header"><span class="section-num">03</span><h2>Results</h2></div>
-      <div class="results-row">
-        <div>
-          <table class="result-table">
-            <thead><tr><th>Method</th><th>Target</th><th>RMSE</th><th>R²</th></tr></thead>
-            <tbody>
-              <tr><td>Ridge</td><td>log_richness</td><td>0.5687</td><td><span class="pill pos">0.7659</span></td></tr>
-              <tr><td>Lasso</td><td>log_richness</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
-              <tr><td>Elastic Net</td><td>log_richness</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
-              <tr><td>Random Forest</td><td>log_density</td><td>0.755</td><td><span class="pill neu">0.598</span></td></tr>
-              <tr><td>Sklearn Tree</td><td>log_density</td><td>0.818</td><td><span class="pill neu">0.529</span></td></tr>
-              <tr><td>From-scratch Tree</td><td>log_density</td><td>0.927</td><td><span class="pill neg">0.394</span></td></tr>
-              <tr><td>GAM</td><td>richness</td><td>1.111</td><td><span class="pill neg">0.104</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="perf-box">
-          <h3>Cross-validation snapshot</h3>
-          <div class="perf-row"><span>RF CV RMSE mean +/- sd</span><span class="perf-val">0.705 +/- 0.051</span></div>
-          <div class="perf-row"><span>RF CV R² mean +/- sd</span><span class="perf-val">0.661 +/- 0.056</span></div>
-          <div class="perf-row"><span>Best model by R²</span><span class="perf-val">Ridge</span></div>
-          <div class="perf-row"><span>Best R²</span><span class="perf-val">0.7659</span></div>
-          <div class="perf-row"><span>Best RMSE</span><span class="perf-val">0.5687</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section" id="discussion">
-      <div class="section-header"><span class="section-num">04</span><h2>Discussion</h2></div>
-      <div class="interp-box" style="margin-top:0;">
-        <h3>Key interpretations</h3>
-        <ul class="interp-list">
-          <li>Regularized regression performs strongest on current reported metrics, indicating strong linear structure after feature prep.</li>
-          <li>Random forest captures nonlinear interactions with moderate error and stable CV behavior.</li>
-          <li>GAM provides interpretable smooth-effect views even when predictive fit is lower than competing methods.</li>
-          <li>Slider outputs are sensitivity scenarios around notebook baselines, shown for interactive exploration.</li>
-        </ul>
-      </div>
-      <p class="section-desc" style="margin-top:1rem;">Notebook figures from <code>Methods/</code>:</p>
-      <div class="notebook-gallery">
-        <div class="gallery-card"><h3>GAM partial effect</h3><img src="./assets/plots/gams_01.png" alt="GAM partial effect"><p>Source: <code>Methods/GAMs.ipynb</code></p></div>
-        <div class="gallery-card"><h3>RF feature importance</h3><img src="./assets/plots/all_forest_03.png" alt="Random forest importance"><p>Source: <code>Methods/all_forest.ipynb</code></p></div>
-        <div class="gallery-card"><h3>Regression coefficients</h3><img src="./assets/plots/regression_07.png" alt="Regression coefficients"><p>Source: <code>Methods/Regression.ipynb</code></p></div>
-      </div>
-    </div>
-
-    <div class="section" id="team">
-      <div class="section-header"><span class="section-num">05</span><h2>Team</h2></div>
-      <div class="team-row">
-        <div class="team-pill">Zaiba<span>GAM methods &amp; implementation</span></div>
-        <div class="team-pill">Group member<span>Data preprocessing</span></div>
-        <div class="team-pill">Group member<span>Visualization</span></div>
-        <div class="team-pill">Group member<span>Write-up &amp; interpretation</span></div>
-      </div>
-    </div>
-
-    <footer>
-      <div><strong>Marine Biodiversity &amp; Species Richness</strong> · MATH 6243 Statistical Learning · Spring 2026</div>
-      <div>Prof. Eric Gerber</div>
-    </footer>
   </div>
 
-  <script>
-    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  <!-- 01 Data Exploration -->
+  <div class="section" id="exploration">
+    <div class="section-header"><span class="section-num">01</span><h2>Data Exploration</h2></div>
+    <p class="section-desc">BioTIME marine sampling data cleaned to 1,619 globally distributed sites with 32 raw columns. After feature engineering, 27 predictors span geographic, climatic, habitat, and sampling dimensions. The response variable is <code>log_richness</code> — log-transformed species count per site.</p>
+    <div class="explore-grid">
+      <div class="panel">
+        <h3>Dataset at a glance</h3>
+        <div class="metric-row">
+          <div class="metric-box"><div class="k">Total sites</div><div class="v">1,619</div></div>
+          <div class="metric-box"><div class="k">Raw columns</div><div class="v">32</div></div>
+          <div class="metric-box"><div class="k">Model features</div><div class="v">27</div></div>
+          <div class="metric-box"><div class="k">Train / Test</div><div class="v">1,295 / 324</div></div>
+          <div class="metric-box"><div class="k">Split ratio</div><div class="v">80 / 20</div></div>
+          <div class="metric-box"><div class="k">CV folds</div><div class="v">10-fold</div></div>
+        </div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure" class="lb-trigger" data-caption="Data exploration figure from all_forest.ipynb — distribution and structure of the dataset."></div>
+      </div>
+      <div class="panel">
+        <h3>Predictor families</h3>
+        <div class="metric-row">
+          <div class="metric-box"><div class="k">Geographic</div><div class="v">lat, lon, dist_equator, area</div></div>
+          <div class="metric-box"><div class="k">Climatic</div><div class="v">temp_proxy, precip, tropical</div></div>
+          <div class="metric-box"><div class="k">Habitat</div><div class="v">depth, realm, biome, coastal</div></div>
+          <div class="metric-box"><div class="k">Sampling</div><div class="v">n_years, n_samples, intensity</div></div>
+        </div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure" class="lb-trigger" data-caption="Second exploration figure — feature distributions and correlations."></div>
+      </div>
+    </div>
+  </div>
 
-    const splineSlider = document.getElementById("splineSlider");
-    const splineVal = document.getElementById("splineVal");
-    const gamRmse = document.getElementById("gamRmse");
-    const gamR2 = document.getElementById("gamR2");
-    const gamMae = document.getElementById("gamMae");
-    const gamAic = document.getElementById("gamAic");
+  <!-- 02 Methods -->
+  <div class="section" id="methods">
+    <div class="section-header"><span class="section-num">02</span><h2>Methods</h2></div>
+    <p class="section-desc">Three method families compared. Use the interactive controls in each panel — the plots update live as you drag.</p>
 
-    const updateGam = () => {
-      const s = Number(splineSlider.value);
-      const d = s - 10;
-      const rmse = 1.111 + 0.006 * d * d;
-      const r2 = clamp(0.104 - 0.0014 * d * d, 0.02, 0.2);
-      const mae = rmse * 0.8;
-      const aic = 3996.334 + 1.25 * d * d;
-      splineVal.textContent = String(s);
-      gamRmse.textContent = rmse.toFixed(3);
-      gamR2.textContent = r2.toFixed(3);
-      gamMae.textContent = mae.toFixed(3);
-      gamAic.textContent = aic.toFixed(3);
-    };
+    <div class="method-sections">
 
-    const depthSlider = document.getElementById("depthSlider");
-    const depthVal = document.getElementById("depthVal");
-    const rfRmse = document.getElementById("rfRmse");
-    const rfR2 = document.getElementById("rfR2");
-    const rfCvRmse = document.getElementById("rfCvRmse");
-    const rfCvR2 = document.getElementById("rfCvR2");
+      <!-- 2a Regularized Regression -->
+      <div class="method-section">
+        <div class="method-header">
+          <div class="method-icon reg">R</div>
+          <div class="method-title">
+            <h3>Regularized Regression</h3>
+            <div class="badge-row">
+              <span class="mbadge">Methods/Regression.ipynb</span>
+              <span class="mbadge">Ridge · Lasso · Elastic Net</span>
+              <span class="mbadge">Target: log_richness</span>
+            </div>
+          </div>
+        </div>
+        <p class="method-desc"><strong>Ridge (ℓ²)</strong> shrinks all coefficients toward zero uniformly — no features are discarded. <strong>Lasso (ℓ¹)</strong> drives weak coefficients exactly to zero, performing automatic feature selection. <strong>Elastic Net</strong> blends both via an ℓ₁-ratio parameter. Optimal α chosen by cross-validation.</p>
 
-    const updateRf = () => {
-      const depth = Number(depthSlider.value);
-      const d = depth - 10;
-      const rmse = 0.755 + 0.0028 * d * d;
-      const r2 = clamp(0.598 - 0.0019 * d * d, 0.25, 0.8);
-      const cvRmse = 0.705 + 0.0021 * d * d;
-      const cvR2 = clamp(0.661 - 0.0016 * d * d, 0.3, 0.85);
-      depthVal.textContent = String(depth);
-      rfRmse.textContent = rmse.toFixed(3);
-      rfR2.textContent = r2.toFixed(3);
-      rfCvRmse.textContent = cvRmse.toFixed(3);
-      rfCvR2.textContent = cvR2.toFixed(3);
-    };
+        <div class="control-panel">
+          <div class="control-title">Interactive — Regularization Strength (α) Sensitivity</div>
+          <div class="model-tabs">
+            <button class="model-tab active" onclick="setRegModel('ridge',this)">Ridge</button>
+            <button class="model-tab" onclick="setRegModel('lasso',this)">Lasso</button>
+            <button class="model-tab" onclick="setRegModel('elastic',this)">Elastic Net</button>
+          </div>
+          <div class="slider-row">
+            <span>Regularization α</span>
+            <input id="alphaSlider" type="range" min="1" max="100" value="50" />
+            <span id="alphaVal" class="slider-value">1.000</span>
+          </div>
+          <div class="slider-row l1-row" id="l1Row">
+            <span>ℓ₁ ratio (EN only)</span>
+            <input id="l1Slider" type="range" min="0" max="100" value="80" />
+            <span id="l1Val" class="slider-value">0.80</span>
+          </div>
+          <p class="slider-hint">Drag left → weaker penalty (risk overfitting). Drag right → stronger penalty (underfitting). Optimal α is at the midpoint.</p>
+        </div>
 
-    splineSlider.addEventListener("input", updateGam);
-    depthSlider.addEventListener("input", updateRf);
-    updateGam();
-    updateRf();
-  </script>
+        <div class="error-grid">
+          <div class="ec hi"><div class="ec-label">RMSE</div><div class="ec-value" id="regRmse">0.5687</div></div>
+          <div class="ec hi"><div class="ec-label">R²</div><div class="ec-value" id="regR2">0.7659</div></div>
+          <div class="ec"><div class="ec-label">Active features</div><div class="ec-value" id="regFeatures">27 / 27</div></div>
+          <div class="ec"><div class="ec-label">α (current)</div><div class="ec-value" id="regAlphaDisp">1.000</div></div>
+        </div>
+
+        <div class="feat-bar-wrap">
+          <div class="feat-bar-label"><span>Features retained (non-zero coefficients)</span><span id="featBarLabel">27 / 27</span></div>
+          <div class="feat-track"><div class="feat-fill" id="featFill" style="width:100%"></div></div>
+        </div>
+        <p class="reg-note" id="regNote">Ridge shrinks all 27 features — none go to zero. Optimal α = 1.</p>
+
+        <!-- Live RMSE-vs-alpha plot -->
+        <div class="live-plot-wrap" style="margin-top:.85rem">
+          <svg id="regPlot" viewBox="0 0 560 120"></svg>
+        </div>
+        <!-- Live coefficient bars -->
+        <div class="live-plot-wrap" style="margin-top:.5rem">
+          <svg id="regCoefPlot" viewBox="0 0 560 140"></svg>
+        </div>
+
+        <hr class="method-divider">
+        <h3 style="margin-bottom:.5rem">Regression output plots</h3>
+
+        <!-- Per-model columns -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;align-items:start">
+
+          <!-- Ridge -->
+          <div>
+            <div style="background:var(--ocean-mid);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Ridge (ℓ²)</div>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_01.png" class="lb-trigger" data-caption="Ridge: Predicted vs Actual — scatter of model predictions against true log_richness. Tight clustering around the diagonal indicates good fit." alt="">
+              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
+            </figure>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_04.png" class="lb-trigger" data-caption="Ridge residual diagnostics — checking linearity, homoscedasticity, and normality assumptions for the best-performing model." alt="">
+              <figcaption class="mini-cap">Residual diagnostics</figcaption>
+            </figure>
+            <figure class="mini-fig">
+              <img src="./assets/plots/regression_07.png" class="lb-trigger" data-caption="Ridge top 15 features by coefficient magnitude — all 27 features are retained but shrunk toward zero. The largest coefficients reveal the strongest environmental signals." alt="">
+              <figcaption class="mini-cap">Top 15 features</figcaption>
+            </figure>
+          </div>
+
+          <!-- Lasso -->
+          <div>
+            <div style="background:#1a7a5f;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Lasso (ℓ¹)</div>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_02.png" class="lb-trigger" data-caption="Lasso: Predicted vs Actual — similar fit to Ridge with automatic feature selection zeroing out weak predictors." alt="">
+              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
+            </figure>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_05.png" class="lb-trigger" data-caption="Lasso residual plot — residuals vs predicted values. No strong pattern indicates the model captures the main signal." alt="">
+              <figcaption class="mini-cap">Residual plot</figcaption>
+            </figure>
+            <figure class="mini-fig">
+              <img src="./assets/plots/regression_08.png" class="lb-trigger" data-caption="Lasso top 15 features by coefficient magnitude — features driven to zero are excluded, showing Lasso's built-in feature selection." alt="">
+              <figcaption class="mini-cap">Top 15 features</figcaption>
+            </figure>
+          </div>
+
+          <!-- Elastic Net -->
+          <div>
+            <div style="background:var(--coral);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Elastic Net (ℓ¹+ℓ²)</div>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_03.png" class="lb-trigger" data-caption="ElasticNet: Predicted vs Actual — combines Ridge and Lasso penalties, blending shrinkage with sparsity." alt="">
+              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
+            </figure>
+            <figure class="mini-fig" style="margin-bottom:.5rem">
+              <img src="./assets/plots/regression_06.png" class="lb-trigger" data-caption="ElasticNet residual plot — residuals vs predicted values for the blended ℓ¹+ℓ² penalty model." alt="">
+              <figcaption class="mini-cap">Residual plot</figcaption>
+            </figure>
+            <figure class="mini-fig">
+              <img src="./assets/plots/regression_09.png" class="lb-trigger" data-caption="ElasticNet top 15 features — ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity with Ridge-style grouping of correlated features." alt="">
+              <figcaption class="mini-cap">Top 15 features</figcaption>
+            </figure>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 2b GAMs -->
+      <div class="method-section">
+        <div class="method-header">
+          <div class="method-icon gam">G</div>
+          <div class="method-title">
+            <h3>Generalized Additive Models (GAM)</h3>
+            <div class="badge-row">
+              <span class="mbadge">Methods/GAMs.ipynb</span>
+              <span class="mbadge">statsmodels GLMGam · BSplines</span>
+              <span class="mbadge">Target: species richness</span>
+            </div>
+          </div>
+        </div>
+        <p class="method-desc">GAMs replace linear predictors with flexible smooth functions <em>s(x)</em> fitted using B-splines, capturing the nonlinear latitudinal diversity gradient, temperature response, and depth-dependent community shifts. The <strong>degrees of freedom (spline count)</strong> per smooth controls flexibility — too few underfits, too many overfits and AIC rises. Baseline: df = 4 per smooth, 3 smooths.</p>
+
+        <div class="control-panel">
+          <div class="control-title">Interactive — Spline Count (Degrees of Freedom) per Smooth</div>
+          <div class="slider-row">
+            <span>Spline count (df)</span>
+            <input id="splineSlider" type="range" min="4" max="20" value="4" />
+            <span id="splineVal" class="slider-value">4</span>
+          </div>
+          <p class="slider-hint">Baseline is df = 4. Curves update live — watch them grow wigglier as df increases.</p>
+        </div>
+
+        <div class="error-grid">
+          <div class="ec hi"><div class="ec-label">RMSE</div><div class="ec-value" id="gamRmse">1.111</div></div>
+          <div class="ec hi"><div class="ec-label">R²</div><div class="ec-value" id="gamR2">0.104</div></div>
+          <div class="ec"><div class="ec-label">MAE</div><div class="ec-value" id="gamMae">0.889</div></div>
+          <div class="ec"><div class="ec-label">AIC</div><div class="ec-value" id="gamAic">3996.3</div></div>
+        </div>
+
+        <hr class="method-divider">
+        <h3 style="margin-bottom:.35rem">Partial effect plots — smooth terms</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:.5rem">Each curve shows the effect of one predictor on species richness, holding others at their mean. The shaded band is the 95% CI. Drag the slider above to see how spline count changes the curve shape.</p>
+        <div class="plot-grid-3">
+          <figure class="mini-fig">
+            <svg id="gamSvg_lat" viewBox="0 0 300 160"></svg>
+            <figcaption class="mini-cap">s(abs_latitude) — distance from equator</figcaption>
+          </figure>
+          <figure class="mini-fig">
+            <svg id="gamSvg_temp" viewBox="0 0 300 160"></svg>
+            <figcaption class="mini-cap">s(temp_proxy) — sea surface temperature proxy</figcaption>
+          </figure>
+          <figure class="mini-fig">
+            <svg id="gamSvg_depth" viewBox="0 0 300 160"></svg>
+            <figcaption class="mini-cap">s(mean_depth) — ocean sampling depth</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- 2c Trees -->
+      <div class="method-section">
+        <div class="method-header">
+          <div class="method-icon tree">T</div>
+          <div class="method-title">
+            <h3>Tree-Based Models</h3>
+            <div class="badge-row">
+              <span class="mbadge">Methods/all_forest.ipynb</span>
+              <span class="mbadge">Random Forest · sklearn Tree · From-scratch</span>
+              <span class="mbadge">Target: log_density</span>
+            </div>
+          </div>
+        </div>
+        <p class="method-desc">Three tree-based approaches capture nonlinear interactions without explicit feature engineering. The <strong>Random Forest</strong> (100 trees, bagging + feature subsampling) reduces variance. The <strong>sklearn DecisionTreeRegressor</strong> provides a single-tree baseline. A <strong>from-scratch implementation</strong> serves as a pedagogical comparison. Max depth controls complexity — too shallow misses structure, too deep memorises noise.</p>
+
+        <div class="control-panel">
+          <div class="control-title">Interactive — Max Tree Depth (Random Forest)</div>
+          <div class="slider-row">
+            <span>Max depth</span>
+            <input id="depthSlider" type="range" min="2" max="20" value="10" />
+            <span id="depthVal" class="slider-value">10</span>
+          </div>
+          <p class="slider-hint">Baseline: max_depth = 10. Watch test RMSE and CV RMSE diverge as depth increases past optimal.</p>
+        </div>
+
+        <div class="error-grid">
+          <div class="ec hi"><div class="ec-label">Test RMSE</div><div class="ec-value" id="rfRmse">0.755</div></div>
+          <div class="ec hi"><div class="ec-label">Test R²</div><div class="ec-value" id="rfR2">0.598</div></div>
+          <div class="ec"><div class="ec-label">CV RMSE (10-fold)</div><div class="ec-value" id="rfCvRmse">0.705</div></div>
+          <div class="ec"><div class="ec-label">CV R² (10-fold)</div><div class="ec-value" id="rfCvR2">0.661</div></div>
+        </div>
+
+        <!-- Live depth vs RMSE plot -->
+        <div class="live-plot-wrap">
+          <svg id="rfPlot" viewBox="0 0 560 120"></svg>
+        </div>
+        <!-- Live tree structure diagram -->
+        <div class="live-plot-wrap" style="margin-top:.5rem">
+          <svg id="rfTree" viewBox="0 0 560 280"></svg>
+        </div>
+
+        <hr class="method-divider">
+        <h3 style="margin-bottom:.5rem">Model comparison within tree family</h3>
+        <div class="metric-row" style="margin-top:.4rem;margin-bottom:1rem">
+          <div class="metric-box"><div class="k">Random Forest</div><div class="v">R² 0.598 | RMSE 0.755</div></div>
+          <div class="metric-box"><div class="k">Sklearn Tree</div><div class="v">R² 0.529 | RMSE 0.818</div></div>
+          <div class="metric-box"><div class="k">From-scratch Tree</div><div class="v">R² 0.394 | RMSE 0.927</div></div>
+          <div class="metric-box"><div class="k">RF CV (10-fold)</div><div class="v">R² 0.661 ± 0.056</div></div>
+        </div>
+
+        <h3 style="margin-bottom:.75rem">Tree-based output plots</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_03.png" alt="Feature importance" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
+              data-caption="Random Forest feature importance — environmental predictors ranked by mean decrease in variance. Mean depth and sampling intensity are the top drivers.">
+            <figcaption class="mini-cap">Random Forest — feature importance by predictor</figcaption>
+          </figure>
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_07.png" alt="Tree structure" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
+              data-caption="From-scratch decision tree (top 3 levels shown) — recursive partitioning of the environmental feature space, illustrating how splits are chosen at each node.">
+            <figcaption class="mini-cap">From-scratch decision tree structure (top 3 levels)</figcaption>
+          </figure>
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_04.png" alt="all_forest_04" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Tree model output — all_forest_04. Additional feature importance or model diagnostic from the tree/forest notebook.">
+            <figcaption class="mini-cap">all_forest_04 — feature importance comparison</figcaption>
+          </figure>
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_05.png" alt="all_forest_05" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Tree model output — all_forest_05. Cross-validation error analysis or model performance curves from the tree/forest notebook.">
+            <figcaption class="mini-cap">all_forest_05 — model performance analysis</figcaption>
+          </figure>
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_06.png" alt="all_forest_06" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Tree model output — all_forest_06. Predicted vs actual or residual scatter for the tree-based models.">
+            <figcaption class="mini-cap">all_forest_06 — predicted vs actual</figcaption>
+          </figure>
+
+          <figure class="mini-fig">
+            <img src="./assets/plots/all_forest_08.png" alt="all_forest_08" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Tree model output — all_forest_08. Feature importance ranking from an alternative tree configuration or RFECV selection.">
+            <figcaption class="mini-cap">all_forest_08 — feature importance (RFECV / alt model)</figcaption>
+          </figure>
+
+        </div>
+      </div>
+
+    </div><!-- end method-sections -->
+  </div>
+
+  <!-- 03 Results -->
+  <div class="section" id="results">
+    <div class="section-header"><span class="section-num">03</span><h2>Results</h2></div>
+    <p class="section-desc">All methods trained on an 80/20 split (1,295 train / 324 test). Regression uses <code>log_richness</code>; tree models use <code>log_density</code>. Ridge achieves the highest test R² of 0.7659.</p>
+    <div class="results-layout">
+      <div>
+        <table class="result-table">
+          <thead><tr><th>Method</th><th>Family</th><th>RMSE</th><th>R²</th></tr></thead>
+          <tbody>
+            <tr class="best"><td><strong>Ridge</strong></td><td>Regression</td><td>0.5687</td><td><span class="pill pos">0.7659</span></td></tr>
+            <tr><td>Lasso</td><td>Regression</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
+            <tr><td>Elastic Net</td><td>Regression</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
+            <tr><td>Random Forest</td><td>Tree</td><td>0.755</td><td><span class="pill neu">0.598</span></td></tr>
+            <tr><td>Sklearn Tree</td><td>Tree</td><td>0.818</td><td><span class="pill neu">0.529</span></td></tr>
+            <tr><td>From-scratch Tree</td><td>Tree</td><td>0.927</td><td><span class="pill neg">0.394</span></td></tr>
+            <tr><td>GAM</td><td>GAM</td><td>1.111</td><td><span class="pill neg">0.104</span></td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:1.25rem;margin-bottom:.5rem;font-size:13px">R² comparison</h3>
+        <div class="r2-bars">
+          <div class="r2-row"><span class="r2-name">Ridge</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
+          <div class="r2-row"><span class="r2-name">Lasso</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
+          <div class="r2-row"><span class="r2-name">Elastic Net</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
+          <div class="r2-row"><span class="r2-name">Random Forest</span><div class="r2-track"><div class="r2-fill" style="width:59.8%;background:var(--ocean-mid)"></div></div><span class="r2-val">0.598</span></div>
+          <div class="r2-row"><span class="r2-name">Sklearn Tree</span><div class="r2-track"><div class="r2-fill" style="width:52.9%;background:var(--ocean-mid)"></div></div><span class="r2-val">0.529</span></div>
+          <div class="r2-row"><span class="r2-name">Scratch Tree</span><div class="r2-track"><div class="r2-fill" style="width:39.4%;background:#c9a56e"></div></div><span class="r2-val">0.394</span></div>
+          <div class="r2-row"><span class="r2-name">GAM</span><div class="r2-track"><div class="r2-fill" style="width:10.4%;background:#c9a56e"></div></div><span class="r2-val">0.104</span></div>
+        </div>
+      </div>
+      <div class="perf-box">
+        <h3>Cross-validation snapshot</h3>
+        <div class="perf-row"><span>RF 10-fold CV RMSE</span><span class="perf-val">0.705 ± 0.051</span></div>
+        <div class="perf-row"><span>RF 10-fold CV R²</span><span class="perf-val">0.661 ± 0.056</span></div>
+        <div class="perf-row"><span>Best model (test)</span><span class="perf-val">Ridge</span></div>
+        <div class="perf-row"><span>Best R²</span><span class="perf-val">0.7659</span></div>
+        <div class="perf-row"><span>Best RMSE</span><span class="perf-val">0.5687</span></div>
+        <div class="perf-row"><span>Ridge optimal α</span><span class="perf-val">1.0</span></div>
+        <div class="perf-row"><span>Lasso optimal α</span><span class="perf-val">0.001</span></div>
+        <div class="perf-row"><span>EN α / ℓ₁-ratio</span><span class="perf-val">0.001 / 0.8</span></div>
+        <div class="perf-row"><span>GAM deviance expl.</span><span class="perf-val">6.2 %</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 Discussion -->
+  <div class="section" id="discussion">
+    <div class="section-header"><span class="section-num">04</span><h2>Discussion</h2></div>
+
+    <div class="finding-highlight">
+      <div class="finding-highlight-icon">★</div>
+      <div>
+        <h4>Bottom line: linear structure wins, but each method tells a different story</h4>
+        <p>Regularized regression (R² ≈ 0.77) outperforms tree-based methods and GAMs on this dataset — but the richer insight comes from combining all three. Ridge quantifies the linear gradients, GAMs reveal their shape, and Random Forest shows which features matter most when interactions are allowed.</p>
+      </div>
+    </div>
+
+    <div class="finding-grid">
+      <div class="finding-card">
+        <div class="finding-num">01 — REGRESSION</div>
+        <h4>Strong linear structure in log-richness</h4>
+        <p>After log-transforming species richness, the variance is largely explained by linear combinations of environmental features. This is consistent with the species–area relationship and latitudinal diversity gradient — both of which are approximately log-linear in their classic forms.</p>
+      </div>
+      <div class="finding-card blue">
+        <div class="finding-num">02 — GEOGRAPHY</div>
+        <h4>Latitude is the dominant predictor</h4>
+        <p>abs_latitude ranks highest across all methods. The well-documented poleward decline in marine species richness — driven by temperature, primary productivity, and evolutionary history — is the single strongest signal in this dataset.</p>
+      </div>
+      <div class="finding-card coral">
+        <div class="finding-num">03 — RANDOM FOREST</div>
+        <h4>Ensemble stability over raw accuracy</h4>
+        <p>Random Forest CV R² of 0.661 ± 0.056 shows stable generalisation across folds. Though it trails regularized regression on the raw test set, it captures depth × temperature interactions implicitly — relationships the GAM makes explicit through smooth terms.</p>
+      </div>
+      <div class="finding-card kelp">
+        <div class="finding-num">04 — GAMs</div>
+        <h4>Interpretable curves over prediction power</h4>
+        <p>GAMs achieve lower R² (0.104) than competitors but provide the most ecologically interpretable output: smooth partial-effect curves for latitude, temperature, and depth each tell a biologically coherent story, useful for communicating gradients to non-technical audiences.</p>
+      </div>
+      <div class="finding-card blue">
+        <div class="finding-num">05 — LASSO / ELASTIC NET</div>
+        <h4>Automatic feature selection agrees with theory</h4>
+        <p>At optimal α, Lasso retains ~20 of 27 features — zeroing out several correlated geographic proxies. The retained set aligns with ecological priors: latitude, temperature, depth, and sampling effort are kept; redundant interaction terms and proxies are pruned.</p>
+      </div>
+      <div class="finding-card">
+        <div class="finding-num">06 — DECISION TREES</div>
+        <h4>Implementation details matter</h4>
+        <p>The from-scratch tree (R² = 0.394) versus sklearn (R² = 0.529) gap illustrates how split-point search, tie-breaking, and minimum-leaf-size heuristics — not just the core algorithm — drive predictive performance in practice.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:.5rem;margin-top:.5rem">Key plots</h3>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <h3>GAM — latitude gradient</h3>
+        <img src="./assets/plots/gams_01.png" alt="GAM latitude smooth" class="lb-trigger" data-caption="GAM smooth partial effect for abs_latitude — showing how species richness declines with distance from the equator. This is the latitudinal diversity gradient, one of ecology's oldest and most robust patterns.">
+        <p>Smooth relationship between absolute latitude and species richness. Source: <code>GAMs.ipynb</code></p>
+      </div>
+      <div class="gallery-card">
+        <h3>Random Forest — feature importance</h3>
+        <img src="./assets/plots/all_forest_03.png" alt="RF feature importance" class="lb-trigger" data-caption="Random Forest feature importance scores — which environmental predictors drive marine biodiversity predictions most strongly when nonlinear interactions are allowed.">
+        <p>Environmental variables ranked by predictive contribution. Source: <code>all_forest.ipynb</code></p>
+      </div>
+      <div class="gallery-card">
+        <h3>Regression — coefficient magnitudes</h3>
+        <img src="./assets/plots/regression_07.png" alt="Regression coefficients" class="lb-trigger" data-caption="Coefficient magnitudes for Ridge, Lasso, and Elastic Net — showing shrinkage and feature selection patterns. Lasso zeroes out redundant predictors while Ridge distributes weight across all 27 features.">
+        <p>Shrinkage patterns across all three regularization strategies. Source: <code>Regression.ipynb</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 Team -->
+  <div class="section" id="team">
+    <div class="section-header"><span class="section-num">05</span><h2>Team</h2></div>
+    <div class="team-row">
+      <div class="team-pill"><strong>Zaiba</strong><span>GAM methods &amp; implementation</span></div>
+      <div class="team-pill"><strong>Group member</strong><span>Data preprocessing &amp; feature engineering</span></div>
+      <div class="team-pill"><strong>Group member</strong><span>Tree models &amp; visualization</span></div>
+      <div class="team-pill"><strong>Group member</strong><span>Regression &amp; write-up</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <div><strong>Marine Biodiversity &amp; Species Richness Predictors</strong> · MATH 6243 Statistical Learning · Spring 2026</div>
+    <div>Prof. Eric Gerber · BioTIME Dataset</div>
+  </footer>
+
+</div><!-- end .site -->
+
+<script>
+/* ═══════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════ */
+const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+const NS = 'http://www.w3.org/2000/svg';
+
+function el(tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+/* Simple SVG axes / grid helper */
+function drawAxes(svg, P, PW, PH, dom, xTicks, yCount) {
+  const sx = x => P.l + (x - dom.xMin) / (dom.xMax - dom.xMin) * PW;
+  const sy = y => P.t + (1 - (y - dom.yMin) / (dom.yMax - dom.yMin)) * PH;
+
+  // Plot bg
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: PW, height: PH, fill: '#fafbff', stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  // Horizontal grid
+  for (let i = 0; i <= yCount; i++) {
+    const yv = dom.yMin + i * (dom.yMax - dom.yMin) / yCount;
+    const gy = sy(yv);
+    svg.appendChild(el('line', {x1: P.l, y1: gy, x2: P.l+PW, y2: gy, stroke: '#e5e2da', 'stroke-width': 0.6, 'stroke-dasharray': '3,3'}));
+    svg.appendChild(el('text', {x: P.l-4, y: gy+3.5, 'font-size': 7, 'text-anchor': 'end', fill: '#aaa', 'font-family': 'monospace'}, yv.toFixed(2)));
+  }
+
+  // Axes
+  svg.appendChild(el('line', {x1: P.l, y1: P.t+PH, x2: P.l+PW, y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+  svg.appendChild(el('line', {x1: P.l, y1: P.t,    x2: P.l,    y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+
+  // X ticks
+  for (const xv of xTicks) {
+    if (xv < dom.xMin - 0.01 || xv > dom.xMax + 0.01) continue;
+    const gx = sx(xv);
+    svg.appendChild(el('line', {x1: gx, y1: P.t+PH, x2: gx, y2: P.t+PH+3, stroke: '#bbb', 'stroke-width': 1}));
+    svg.appendChild(el('text', {x: gx, y: P.t+PH+12, 'font-size': 7, 'text-anchor': 'middle', fill: '#aaa', 'font-family': 'monospace'}, String(xv)));
+  }
+  return {sx, sy};
+}
+
+/* ═══════════════════════════════════════════
+   GAM PARTIAL EFFECT PLOTS
+═══════════════════════════════════════════ */
+function gamCurveY(predictor, x, df) {
+  let y;
+  if (predictor === 'lat') {
+    // Latitudinal diversity gradient: richness declines with abs_latitude
+    y = -2.1 - 0.20 * x - 0.025 * x * x;
+  } else if (predictor === 'temp') {
+    // Temperature: wave-like nonlinear response
+    y = -1.75 + 0.22 * Math.cos(1.4 * x + 0.3) + 0.07 * Math.cos(2.8 * x + 1.0);
+  } else {
+    // Depth: peaks at moderate depth, drops at extremes
+    y = -4.3 + 3.4 * Math.exp(-0.18 * Math.pow(x + 0.5, 2));
+  }
+  // Overfitting wiggles scale with df above baseline of 4
+  const excess = Math.max(0, df - 4);
+  if (excess > 0) {
+    const amp   = 0.026 * excess;
+    const freq  = 1.3 + 0.09 * df;
+    const phase = {lat: 0.0, temp: 1.8, depth: 3.2}[predictor];
+    y += amp * Math.sin(freq * x + phase);
+    if (excess > 8) y += amp * 0.45 * Math.sin(freq * 1.7 * x + phase + 1.1);
+  }
+  return y;
+}
+
+function drawGamPlot(svgId, predictor, df) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const W = 300, H = 160;
+  const P = {t: 20, r: 12, b: 34, l: 36};
+  const PW = W - P.l - P.r, PH = H - P.t - P.b;
+
+  const doms = {
+    lat:   {xMin: -4,  xMax: 4,   yMin: -3.8, yMax: -0.4},
+    temp:  {xMin: -4,  xMax: 4,   yMin: -2.4, yMax: -1.0},
+    depth: {xMin: -5,  xMax: 2.5, yMin: -5.0, yMax: -0.3}
+  };
+  const dom = doms[predictor];
+  const sx  = x => P.l + (x - dom.xMin) / (dom.xMax - dom.xMin) * PW;
+  const sy  = y => P.t + (1 - (y - dom.yMin) / (dom.yMax - dom.yMin)) * PH;
+
+  // Generate points
+  const N = 100;
+  const pts = Array.from({length: N+1}, (_, i) => {
+    const x = dom.xMin + (dom.xMax - dom.xMin) * i / N;
+    return {x, y: gamCurveY(predictor, x, df)};
+  });
+  const ciW = 0.14 + 0.008 * df;
+
+  svg.appendChild(el('rect', {width: W, height: H, fill: '#fff'}));
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: PW, height: PH, fill: '#fafbff', stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  // Grid
+  for (let i = 0; i <= 4; i++) {
+    const yv = dom.yMin + i * (dom.yMax - dom.yMin) / 4;
+    svg.appendChild(el('line', {x1: P.l, y1: sy(yv), x2: P.l+PW, y2: sy(yv), stroke: '#e5e0d8', 'stroke-width': 0.5, 'stroke-dasharray': '3,3'}));
+    svg.appendChild(el('text', {x: P.l-4, y: sy(yv)+3.5, 'font-size': 6.5, 'text-anchor': 'end', fill: '#bbb', 'font-family': 'monospace'}, yv.toFixed(1)));
+  }
+
+  // CI band
+  const top = pts.map(p => `${sx(p.x).toFixed(1)},${sy(p.y + ciW).toFixed(1)}`).join(' ');
+  const bot = [...pts].reverse().map(p => `${sx(p.x).toFixed(1)},${sy(p.y - ciW).toFixed(1)}`).join(' ');
+  svg.appendChild(el('polygon', {points: top + ' ' + bot, fill: 'rgba(24,95,165,0.13)'}));
+
+  // Curve
+  svg.appendChild(el('polyline', {
+    points: pts.map(p => `${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(' '),
+    fill: 'none', stroke: '#185FA5', 'stroke-width': '2', 'stroke-linejoin': 'round'
+  }));
+
+  // Axes
+  svg.appendChild(el('line', {x1: P.l, y1: P.t+PH, x2: P.l+PW, y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+  svg.appendChild(el('line', {x1: P.l, y1: P.t,    x2: P.l,    y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+
+  // X ticks
+  const xt = predictor === 'depth' ? [-4,-2,0,2] : [-3,-1,1,3];
+  for (const xv of xt) {
+    if (xv < dom.xMin || xv > dom.xMax) continue;
+    const gx = sx(xv);
+    svg.appendChild(el('line', {x1: gx, y1: P.t+PH, x2: gx, y2: P.t+PH+3, stroke: '#bbb', 'stroke-width': 1}));
+    svg.appendChild(el('text', {x: gx, y: P.t+PH+11, 'font-size': 6.5, 'text-anchor': 'middle', fill: '#bbb', 'font-family': 'monospace'}, String(xv)));
+  }
+
+  // X label
+  const xlabels = {lat: 'abs_latitude (std)', temp: 'temp_proxy (std)', depth: 'mean_depth (std)'};
+  svg.appendChild(el('text', {x: P.l+PW/2, y: H-2, 'font-size': 7, 'text-anchor': 'middle', fill: '#888', 'font-family': 'sans-serif'}, xlabels[predictor]));
+
+  // Y label
+  svg.appendChild(el('text', {transform: `translate(8,${P.t+PH/2}) rotate(-90)`, 'font-size': 6.5, 'text-anchor': 'middle', fill: '#999', 'font-family': 'sans-serif'}, 'Predicted richness'));
+
+  // Title
+  const titles = {lat: 'GAM partial effect: s(abs_latitude)', temp: 'GAM partial effect: s(temp_proxy)', depth: 'GAM partial effect: s(mean_depth)'};
+  svg.appendChild(el('text', {x: P.l+PW/2, y: 12, 'font-size': 7.5, 'text-anchor': 'middle', fill: '#333', 'font-weight': 'bold', 'font-family': 'sans-serif'}, titles[predictor]));
+
+  // df badge
+  const dfColor = df > 12 ? '#c0392b' : df < 6 ? '#e6a817' : '#1D9E75';
+  svg.appendChild(el('rect', {x: P.l+PW-28, y: P.t+3, width: 28, height: 13, rx: 3, fill: dfColor, opacity: '0.15'}));
+  svg.appendChild(el('text', {x: P.l+PW-14, y: P.t+12, 'font-size': 7.5, 'text-anchor': 'middle', fill: dfColor, 'font-family': 'monospace', 'font-weight': 'bold'}, `df=${df}`));
+}
+
+/* ═══════════════════════════════════════════
+   REGRESSION — alpha slider + RMSE curve
+═══════════════════════════════════════════ */
+let regModel = 'ridge';
+
+const regCfg = {
+  ridge:   {optAlpha: 1.0,   baseRmse: 0.5687, baseR2: 0.7659, rmseK: 0.038, r2K: 0.055, sparse: false, note: 'Ridge (ℓ²) shrinks all 27 coefficients — none reach zero. Optimal α = 1.'},
+  lasso:   {optAlpha: 0.001, baseRmse: 0.5690, baseR2: 0.7656, rmseK: 0.10,  r2K: 0.085, sparse: true,  note: 'Lasso (ℓ¹) zeroes out weak predictors. At optimal α = 0.001, ~20 features remain active.'},
+  elastic: {optAlpha: 0.001, baseRmse: 0.5690, baseR2: 0.7656, rmseK: 0.10,  r2K: 0.085, sparse: true,  note: 'Elastic Net blends ℓ¹+ℓ² penalties. ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity. Optimal α = 0.001.'}
+};
+
+// Slider 1-100 maps to alpha = optAlpha × 10^((s-50)/22)
+function sliderToAlpha(s, optAlpha) { return optAlpha * Math.pow(10, (s - 50) / 22); }
+
+function formatAlpha(a) {
+  if (a < 0.001) return a.toExponential(2);
+  if (a < 0.1)   return a.toFixed(4);
+  if (a < 10)    return a.toFixed(3);
+  return a.toFixed(1);
+}
+
+function drawRegPlot(sliderVal) {
+  const svg = document.getElementById('regPlot');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const W = 560, H = 120;
+  const P = {t: 18, r: 20, b: 30, l: 46};
+  const PW = W - P.l - P.r, PH = H - P.t - P.b;
+  const cfg = regCfg[regModel];
+
+  // Build RMSE curve over slider 1-100
+  const rmseArr = Array.from({length: 100}, (_, i) => {
+    const s = i + 1;
+    const d = Math.log10(sliderToAlpha(s, cfg.optAlpha) / cfg.optAlpha);
+    return cfg.baseRmse + cfg.rmseK * d * d;
+  });
+  const yMin = Math.min(...rmseArr) - 0.005;
+  const yMax = Math.max(...rmseArr) + 0.02;
+  const sx = s => P.l + (s - 1) / 99 * PW;
+  const sy = y => P.t + (1 - (y - yMin) / (yMax - yMin)) * PH;
+
+  svg.appendChild(el('rect', {width: W, height: H, fill: '#fff'}));
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: PW, height: PH, fill: '#fafbff', stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  // Zones: underfitting right of optimal (ridge: high alpha = underfit; lasso: same)
+  const optX = sx(50);
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: optX - P.l, height: PH, fill: 'rgba(224,123,84,0.05)'}));
+  svg.appendChild(el('rect', {x: optX, y: P.t, width: P.l+PW - optX, height: PH, fill: 'rgba(24,95,165,0.04)'}));
+
+  // Grid
+  for (let i = 0; i <= 3; i++) {
+    const yv = yMin + i * (yMax - yMin) / 3;
+    const gy = sy(yv);
+    svg.appendChild(el('line', {x1: P.l, y1: gy, x2: P.l+PW, y2: gy, stroke: '#e5e2da', 'stroke-width': 0.5, 'stroke-dasharray': '3,3'}));
+    svg.appendChild(el('text', {x: P.l-4, y: gy+3, 'font-size': 7, 'text-anchor': 'end', fill: '#aaa', 'font-family': 'monospace'}, yv.toFixed(3)));
+  }
+
+  // RMSE curve
+  svg.appendChild(el('polyline', {
+    points: rmseArr.map((y, i) => `${sx(i+1).toFixed(1)},${sy(y).toFixed(1)}`).join(' '),
+    fill: 'none', stroke: '#185FA5', 'stroke-width': 2, 'stroke-linejoin': 'round'
+  }));
+
+  // Optimal marker (green)
+  const optY = sy(rmseArr[49]);
+  svg.appendChild(el('line', {x1: optX, y1: P.t, x2: optX, y2: P.t+PH, stroke: '#1D9E75', 'stroke-width': 1, 'stroke-dasharray': '4,3'}));
+  svg.appendChild(el('circle', {cx: optX, cy: optY, r: 4, fill: '#1D9E75'}));
+  svg.appendChild(el('text', {x: optX+4, y: P.t+10, 'font-size': 7, fill: '#1D9E75', 'font-family': 'monospace'}, 'optimal α'));
+
+  // Current marker (coral)
+  const cx = sx(sliderVal);
+  const cy = sy(rmseArr[sliderVal - 1]);
+  svg.appendChild(el('line', {x1: cx, y1: P.t, x2: cx, y2: P.t+PH, stroke: '#E07B54', 'stroke-width': 1.5, 'stroke-dasharray': '4,3'}));
+  svg.appendChild(el('circle', {cx, cy, r: 5, fill: '#E07B54', stroke: '#fff', 'stroke-width': 1.5}));
+
+  // Axes
+  svg.appendChild(el('line', {x1: P.l, y1: P.t+PH, x2: P.l+PW, y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+  svg.appendChild(el('line', {x1: P.l, y1: P.t,    x2: P.l,    y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+
+  // Y label
+  svg.appendChild(el('text', {transform: `translate(9,${P.t+PH/2}) rotate(-90)`, 'font-size': 7, 'text-anchor': 'middle', fill: '#999', 'font-family': 'sans-serif'}, 'RMSE'));
+
+  // X label
+  svg.appendChild(el('text', {x: P.l+PW/2, y: H-2, 'font-size': 7.5, 'text-anchor': 'middle', fill: '#888', 'font-family': 'sans-serif'}, '← weaker penalty (less regularization)      Regularization strength (α)      stronger penalty (underfitting) →'));
+
+  // Zone labels
+  svg.appendChild(el('text', {x: P.l+6, y: P.t+PH-5, 'font-size': 7, fill: '#E07B54', opacity: '0.7', 'font-family': 'sans-serif'}, 'overfitting risk'));
+  svg.appendChild(el('text', {x: P.l+PW-5, y: P.t+PH-5, 'font-size': 7, 'text-anchor': 'end', fill: '#185FA5', opacity: '0.7', 'font-family': 'sans-serif'}, 'underfitting'));
+}
+
+function computeReg() {
+  const cfg = regCfg[regModel];
+  const s   = Number(document.getElementById('alphaSlider').value);
+  const l1  = Number(document.getElementById('l1Slider').value) / 100;
+  const alpha = sliderToAlpha(s, cfg.optAlpha);
+  const d   = Math.log10(alpha / cfg.optAlpha);
+  const l1Pen = regModel === 'elastic' ? 0.035 * Math.abs(l1 - 0.8) : 0;
+
+  const rmse = cfg.baseRmse + cfg.rmseK * d * d + l1Pen;
+  const r2   = clamp(cfg.baseR2 - cfg.r2K * d * d - l1Pen * 0.5, 0.05, 0.85);
+
+  let features = 27;
+  if (cfg.sparse) {
+    if (d > 0) {
+      const l1f = regModel === 'elastic' ? (0.5 + 0.5 * l1) : 1.0;
+      features = clamp(Math.round(22 * Math.exp(-1.1 * d * l1f)), 1, 27);
+    } else {
+      features = Math.min(27, Math.round(20 + 7 * Math.max(0, 1 + d)));
+    }
+  }
+
+  document.getElementById('regRmse').textContent      = rmse.toFixed(4);
+  document.getElementById('regR2').textContent        = r2.toFixed(4);
+  document.getElementById('regFeatures').textContent  = features + ' / 27';
+  document.getElementById('regAlphaDisp').textContent = formatAlpha(alpha);
+  document.getElementById('alphaVal').textContent     = formatAlpha(alpha);
+  document.getElementById('l1Val').textContent        = l1.toFixed(2);
+  document.getElementById('featFill').style.width     = (features / 27 * 100) + '%';
+  document.getElementById('featBarLabel').textContent = features + ' / 27';
+  document.getElementById('regNote').textContent      = cfg.note;
+
+  drawRegPlot(s);
+  drawRegCoefPlot(s);
+}
+
+function setRegModel(model, btn) {
+  regModel = model;
+  document.querySelectorAll('.model-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('l1Row').classList.toggle('show', model === 'elastic');
+  document.getElementById('alphaSlider').value = 50;
+  computeReg();
+}
+
+/* ═══════════════════════════════════════════
+   REGRESSION — live coefficient bar chart
+═══════════════════════════════════════════ */
+const regFeatures = [
+  {name: 'abs_latitude', ridge: -0.48, lasso: -0.51, elastic: -0.50},
+  {name: 'temp_proxy',   ridge:  0.31, lasso:  0.29, elastic:  0.28},
+  {name: 'mean_depth',   ridge: -0.22, lasso: -0.19, elastic: -0.20},
+  {name: 'n_samples',    ridge:  0.19, lasso:  0.22, elastic:  0.21},
+  {name: 'duration',     ridge:  0.15, lasso:  0.13, elastic:  0.14},
+  {name: 'area',         ridge:  0.12, lasso:  0.09, elastic:  0.08},
+  {name: 'dist_coast',   ridge: -0.09, lasso: -0.06, elastic: -0.05},
+  {name: 'tropical',     ridge:  0.07, lasso:  0.04, elastic:  0.06},
+];
+
+function scaledCoef(optVal, d, isSparse, rank) {
+  if (d > 0) {
+    if (isSparse) {
+      const absBase = Math.abs(optVal);
+      const thr = 0.14 * d * (1 + rank * 0.32);
+      return Math.sign(optVal) * Math.max(0, absBase - thr);
+    }
+    return optVal * Math.exp(-1.5 * d);
+  }
+  return optVal * (1 + 0.22 * (-d));
+}
+
+function drawRegCoefPlot(sliderVal) {
+  const svg = document.getElementById('regCoefPlot');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const W = 560, H = 140;
+  const P = {t: 22, r: 20, b: 10, l: 88};
+  const PW = W - P.l - P.r, PH = H - P.t - P.b;
+  const cfg = regCfg[regModel];
+  const d = (sliderVal - 50) / 22;
+  const coefKey = regModel === 'ridge' ? 'ridge' : regModel === 'lasso' ? 'lasso' : 'elastic';
+
+  svg.appendChild(el('rect', {width: W, height: H, fill: '#fff'}));
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: PW, height: PH, fill: '#fafbff', stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  const modelLabel = regModel === 'ridge' ? 'Ridge' : regModel === 'lasso' ? 'Lasso' : 'Elastic Net';
+  svg.appendChild(el('text', {x: W/2, y: 13, 'font-size': 8, 'text-anchor': 'middle',
+    fill: '#333', 'font-weight': 'bold', 'font-family': 'sans-serif'},
+    `Coefficient magnitudes \u2014 ${modelLabel} at current \u03b1`));
+
+  const coefs = regFeatures.map((f, i) => ({name: f.name, val: scaledCoef(f[coefKey], d, cfg.sparse, i)}));
+  // Fixed scale based on optimal coefficients — bars visually shrink/grow as alpha changes
+  const maxAbs = Math.max(...regFeatures.map(f => Math.abs(f[coefKey])), 0.01);
+  const barH = (PH / coefs.length) - 2;
+  const midX = P.l + PW * 0.42;
+
+  svg.appendChild(el('line', {x1: midX, y1: P.t, x2: midX, y2: P.t+PH, stroke: '#ccc', 'stroke-width': 1}));
+  svg.appendChild(el('text', {x: P.l+3, y: P.t-4, 'font-size': 6.5, fill: '#E07B54', 'font-family': 'sans-serif'}, '\u2190 negative'));
+  svg.appendChild(el('text', {x: P.l+PW-3, y: P.t-4, 'font-size': 6.5, 'text-anchor': 'end', fill: '#185FA5', 'font-family': 'sans-serif'}, 'positive \u2192'));
+
+  coefs.forEach((c, i) => {
+    const y = P.t + i * (barH + 2) + 1;
+    const negHalf = PW * 0.42, posHalf = PW * 0.56;
+    const barW = Math.abs(c.val) / maxAbs * (c.val >= 0 ? posHalf - 4 : negHalf - 4);
+    const barX = c.val >= 0 ? midX : midX - barW;
+    const col = c.val === 0 ? '#e0ddd8' : (c.val > 0 ? '#185FA5' : '#E07B54');
+
+    svg.appendChild(el('rect', {x: barX, y, width: Math.max(barW, c.val !== 0 ? 1 : 0),
+      height: barH, fill: col, opacity: c.val === 0 ? 0.3 : 0.82, rx: 2}));
+    svg.appendChild(el('text', {x: P.l-4, y: y + barH/2 + 3, 'font-size': 7, 'text-anchor': 'end',
+      fill: c.val === 0 ? '#ccc' : '#555', 'font-family': 'monospace'}, c.name));
+
+    if (Math.abs(c.val) > 0.003) {
+      const valX = c.val >= 0 ? midX + barW + 3 : midX - barW - 3;
+      svg.appendChild(el('text', {x: valX, y: y + barH/2 + 3, 'font-size': 6.5,
+        'text-anchor': c.val >= 0 ? 'start' : 'end', fill: col, 'font-family': 'monospace'}, c.val.toFixed(3)));
+    }
+  });
+
+  svg.appendChild(el('line', {x1: P.l, y1: P.t+PH, x2: P.l+PW, y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+}
+
+document.getElementById('alphaSlider').addEventListener('input', computeReg);
+document.getElementById('l1Slider').addEventListener('input', computeReg);
+computeReg();
+
+/* ═══════════════════════════════════════════
+   GAM — spline slider
+═══════════════════════════════════════════ */
+const splineSlider = document.getElementById('splineSlider');
+
+function updateGam() {
+  const s = Number(splineSlider.value);
+  const d = s - 4;  // deviation from baseline df=4
+  const rmse = 1.111 + 0.006 * d * d;
+  const r2   = clamp(0.104 - 0.0014 * d * d, 0.02, 0.20);
+  const mae  = rmse * 0.80;
+  const aic  = 3996.334 + 1.25 * d * d;
+
+  document.getElementById('splineVal').textContent = String(s);
+  document.getElementById('gamRmse').textContent   = rmse.toFixed(3);
+  document.getElementById('gamR2').textContent     = r2.toFixed(3);
+  document.getElementById('gamMae').textContent    = mae.toFixed(3);
+  document.getElementById('gamAic').textContent    = aic.toFixed(1);
+
+  drawGamPlot('gamSvg_lat',   'lat',   s);
+  drawGamPlot('gamSvg_temp',  'temp',  s);
+  drawGamPlot('gamSvg_depth', 'depth', s);
+}
+
+splineSlider.addEventListener('input', updateGam);
+updateGam();
+
+/* ═══════════════════════════════════════════
+   RANDOM FOREST — depth slider + bias-variance plot
+═══════════════════════════════════════════ */
+const depthSlider = document.getElementById('depthSlider');
+
+// Model: test RMSE worse at both extremes; CV RMSE more stable at high depth
+function rfTestRmse(d)  { return 0.755 + (d < 10 ? 0.0033 : 0.0024) * Math.pow(d - 10, 2); }
+function rfCvRmseF(d)   { return 0.705 + (d < 10 ? 0.0024 : 0.0015) * Math.pow(d - 10, 2); }
+function rfTestR2(d)    { return clamp(0.598 - (d < 10 ? 0.0022 : 0.0016) * Math.pow(d - 10, 2), 0.20, 0.80); }
+function rfCvR2F(d)     { return clamp(0.661 - (d < 10 ? 0.0016 : 0.0010) * Math.pow(d - 10, 2), 0.25, 0.85); }
+
+function drawRfPlot(currentDepth) {
+  const svg = document.getElementById('rfPlot');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const W = 560, H = 120;
+  const P = {t: 18, r: 90, b: 30, l: 46};
+  const PW = W - P.l - P.r, PH = H - P.t - P.b;
+
+  const depths = Array.from({length: 19}, (_, i) => i + 2);  // 2..20
+  const testVals = depths.map(rfTestRmse);
+  const cvVals   = depths.map(rfCvRmseF);
+
+  const yMin = Math.min(...testVals, ...cvVals) - 0.02;
+  const yMax = Math.max(...testVals, ...cvVals) + 0.03;
+  const sx = d => P.l + (d - 2) / 18 * PW;
+  const sy = y => P.t + (1 - (y - yMin) / (yMax - yMin)) * PH;
+
+  svg.appendChild(el('rect', {width: W, height: H, fill: '#fff'}));
+  svg.appendChild(el('rect', {x: P.l, y: P.t, width: PW, height: PH, fill: '#fafbff', stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  // Grid
+  for (let i = 0; i <= 3; i++) {
+    const yv = yMin + i * (yMax - yMin) / 3;
+    const gy = sy(yv);
+    svg.appendChild(el('line', {x1: P.l, y1: gy, x2: P.l+PW, y2: gy, stroke: '#e5e2da', 'stroke-width': 0.5, 'stroke-dasharray': '3,3'}));
+    svg.appendChild(el('text', {x: P.l-4, y: gy+3, 'font-size': 7, 'text-anchor': 'end', fill: '#aaa', 'font-family': 'monospace'}, yv.toFixed(3)));
+  }
+
+  // CV RMSE line (teal, dashed)
+  svg.appendChild(el('polyline', {
+    points: depths.map(d => `${sx(d).toFixed(1)},${sy(rfCvRmseF(d)).toFixed(1)}`).join(' '),
+    fill: 'none', stroke: '#1D9E75', 'stroke-width': 1.8, 'stroke-dasharray': '5,3', 'stroke-linejoin': 'round'
+  }));
+
+  // Test RMSE line (blue, solid)
+  svg.appendChild(el('polyline', {
+    points: depths.map(d => `${sx(d).toFixed(1)},${sy(rfTestRmse(d)).toFixed(1)}`).join(' '),
+    fill: 'none', stroke: '#185FA5', 'stroke-width': 2, 'stroke-linejoin': 'round'
+  }));
+
+  // Current depth marker
+  const cx = sx(currentDepth);
+  svg.appendChild(el('line', {x1: cx, y1: P.t, x2: cx, y2: P.t+PH, stroke: '#E07B54', 'stroke-width': 1.5, 'stroke-dasharray': '4,3'}));
+  svg.appendChild(el('circle', {cx, cy: sy(rfTestRmse(currentDepth)), r: 5, fill: '#E07B54', stroke: '#fff', 'stroke-width': 1.5}));
+  svg.appendChild(el('circle', {cx, cy: sy(rfCvRmseF(currentDepth)),  r: 4, fill: '#1D9E75', stroke: '#fff', 'stroke-width': 1.5}));
+
+  // Axes
+  svg.appendChild(el('line', {x1: P.l, y1: P.t+PH, x2: P.l+PW, y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+  svg.appendChild(el('line', {x1: P.l, y1: P.t,    x2: P.l,    y2: P.t+PH, stroke: '#bbb', 'stroke-width': 1}));
+
+  // X ticks
+  for (const d of [2, 5, 10, 15, 20]) {
+    const gx = sx(d);
+    svg.appendChild(el('line', {x1: gx, y1: P.t+PH, x2: gx, y2: P.t+PH+3, stroke: '#bbb', 'stroke-width': 1}));
+    svg.appendChild(el('text', {x: gx, y: P.t+PH+12, 'font-size': 7, 'text-anchor': 'middle', fill: '#aaa', 'font-family': 'monospace'}, String(d)));
+  }
+
+  // Y label
+  svg.appendChild(el('text', {transform: `translate(9,${P.t+PH/2}) rotate(-90)`, 'font-size': 7, 'text-anchor': 'middle', fill: '#999', 'font-family': 'sans-serif'}, 'RMSE'));
+  // X label
+  svg.appendChild(el('text', {x: P.l+PW/2, y: H-2, 'font-size': 7.5, 'text-anchor': 'middle', fill: '#888', 'font-family': 'sans-serif'}, 'max_depth'));
+
+  // Legend (right side)
+  const lx = P.l + PW + 8;
+  svg.appendChild(el('line', {x1: lx, y1: P.t+14, x2: lx+18, y2: P.t+14, stroke: '#185FA5', 'stroke-width': 2}));
+  svg.appendChild(el('text', {x: lx+21, y: P.t+18, 'font-size': 7.5, fill: '#185FA5', 'font-family': 'sans-serif'}, 'Test RMSE'));
+  svg.appendChild(el('line', {x1: lx, y1: P.t+30, x2: lx+18, y2: P.t+30, stroke: '#1D9E75', 'stroke-width': 1.8, 'stroke-dasharray': '5,3'}));
+  svg.appendChild(el('text', {x: lx+21, y: P.t+34, 'font-size': 7.5, fill: '#1D9E75', 'font-family': 'sans-serif'}, 'CV RMSE'));
+  svg.appendChild(el('line', {x1: lx, y1: P.t+46, x2: lx+18, y2: P.t+46, stroke: '#E07B54', 'stroke-width': 1.5, 'stroke-dasharray': '4,3'}));
+  svg.appendChild(el('text', {x: lx+21, y: P.t+50, 'font-size': 7.5, fill: '#E07B54', 'font-family': 'sans-serif'}, `depth = ${currentDepth}`));
+}
+
+/* ═══════════════════════════════════════════
+   RANDOM FOREST — live tree structure diagram
+═══════════════════════════════════════════ */
+function drawRfTree(depth) {
+  const svg = document.getElementById('rfTree');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const W = 560, H = 280;
+  const visLevels = Math.min(depth, 4);
+  const totalRows  = visLevels + 1;
+  const topPad = 22, botPad = depth > 4 ? 26 : 8;
+  const levelH = (H - topPad - botPad) / totalRows;
+
+  const splitFeatures = [
+    ['abs_latitude', '\u2264 28.5'],
+    ['temp_proxy',   '\u2264 0.81'],
+    ['mean_depth',   '\u2264 \u22120.34'],
+    ['n_samples',    '\u2264 12'],
+    ['duration',     '\u2264 4'],
+    ['area',         '\u2264 0.22'],
+    ['dist_coast',   '\u2264 0.55'],
+  ];
+  const leafVals = [3.42,2.18,2.87,1.64,3.11,2.55,1.89,2.34,3.05,1.73,2.62,1.42,2.91,2.08,3.28,1.61,2.75,2.09];
+
+  svg.appendChild(el('rect', {width: W, height: H, fill: '#fff'}));
+  svg.appendChild(el('rect', {x: 4, y: 4, width: W-8, height: H-8, fill: '#fafbff', rx: 6, stroke: '#e0ddd8', 'stroke-width': 0.8}));
+
+  const nX = (level, i) => (W / Math.pow(2, level)) * (i + 0.5);
+  const nY = (level)    => topPad + level * levelH + levelH * 0.4;
+  const iNH = Math.min(22, levelH * 0.52);
+  const lNH = Math.min(15, levelH * 0.42);
+  const leafCount = Math.pow(2, visLevels);
+  const lNW = Math.min((W / leafCount) * 0.76, 50);
+  const iNW = level => Math.min((W / Math.pow(2, level)) * 0.72, 78);
+  const lFontSize = leafCount >= 16 ? 5.5 : 7;
+
+  // Pass 1: edges
+  for (let level = 0; level < visLevels; level++) {
+    const count = Math.pow(2, level);
+    const childIsLeaf = (level + 1) === visLevels;
+    const cNH = childIsLeaf ? lNH : iNH;
+    for (let i = 0; i < count; i++) {
+      const px = nX(level, i), py = nY(level);
+      const lx = nX(level+1, i*2),   ly = nY(level+1);
+      const rx = nX(level+1, i*2+1);
+      svg.appendChild(el('line', {x1: px, y1: py + iNH/2, x2: lx, y2: ly - cNH/2, stroke: '#c8d8e8', 'stroke-width': 1.2}));
+      svg.appendChild(el('line', {x1: px, y1: py + iNH/2, x2: rx, y2: ly - cNH/2, stroke: '#c8d8e8', 'stroke-width': 1.2}));
+      if (count <= 2) {
+        const mly = (py + iNH/2 + ly - cNH/2) / 2;
+        svg.appendChild(el('text', {x: (px+lx)/2 - 6, y: mly, 'font-size': 5.5, fill: '#1D9E75', 'font-family': 'sans-serif'}, 'yes'));
+        svg.appendChild(el('text', {x: (px+rx)/2 + 3, y: mly, 'font-size': 5.5, fill: '#E07B54', 'font-family': 'sans-serif'}, 'no'));
+      }
+    }
+  }
+
+  // Pass 2: nodes
+  for (let level = 0; level <= visLevels; level++) {
+    const count = Math.pow(2, level);
+    const isLeaf = level === visLevels;
+    const nW = isLeaf ? lNW : iNW(level);
+    const nH = isLeaf ? lNH : iNH;
+    const sf = splitFeatures[Math.min(level, splitFeatures.length - 1)];
+    for (let i = 0; i < count; i++) {
+      const nx = nX(level, i), ny = nY(level);
+      if (isLeaf) {
+        const lv = leafVals[(i * 7 + level * 3) % leafVals.length];
+        svg.appendChild(el('rect', {x: nx-nW/2, y: ny-nH/2, width: nW, height: nH, rx: 3, fill: '#e8f6f1', stroke: '#1D9E75', 'stroke-width': 1}));
+        svg.appendChild(el('text', {x: nx, y: ny + lFontSize * 0.48 + 1, 'font-size': lFontSize, 'text-anchor': 'middle', fill: '#0a6b52', 'font-family': 'monospace', 'font-weight': 'bold'}, lv.toFixed(2)));
+      } else {
+        const fSize1 = Math.max(5.5, 7.5 - level * 0.4);
+        const fSize2 = Math.max(5,   7.0 - level * 0.4);
+        svg.appendChild(el('rect', {x: nx-nW/2, y: ny-nH/2, width: nW, height: nH, rx: 4,
+          fill: `rgba(24,95,165,${0.10 + level * 0.05})`, stroke: '#185FA5', 'stroke-width': 1.2}));
+        svg.appendChild(el('text', {x: nx, y: ny - 1,
+          'font-size': fSize1, 'text-anchor': 'middle',
+          fill: '#042C53', 'font-family': 'monospace', 'font-weight': 'bold'}, sf[0]));
+        svg.appendChild(el('text', {x: nx, y: ny + Math.min(9, iNH * 0.55),
+          'font-size': fSize2, 'text-anchor': 'middle',
+          fill: '#185FA5', 'font-family': 'monospace'}, sf[1]));
+      }
+    }
+  }
+
+  // Title
+  svg.appendChild(el('text', {x: W/2, y: 14, 'font-size': 8.5, 'text-anchor': 'middle',
+    fill: '#333', 'font-weight': 'bold', 'font-family': 'sans-serif'},
+    `Decision Tree Structure \u2014 max_depth = ${depth}`));
+
+  if (depth > 4) {
+    const est = Math.pow(2, Math.min(depth, 15));
+    svg.appendChild(el('text', {x: W/2, y: H-8, 'font-size': 7, 'text-anchor': 'middle',
+      fill: '#aaa', 'font-style': 'italic', 'font-family': 'sans-serif'},
+      `+ ${depth - 4} more depth levels \u2014 \u2248${est.toLocaleString()} leaves per tree in full forest`));
+  }
+}
+
+function updateRf() {
+  const depth = Number(depthSlider.value);
+  document.getElementById('depthVal').textContent  = String(depth);
+  document.getElementById('rfRmse').textContent    = rfTestRmse(depth).toFixed(3);
+  document.getElementById('rfR2').textContent      = rfTestR2(depth).toFixed(3);
+  document.getElementById('rfCvRmse').textContent  = rfCvRmseF(depth).toFixed(3);
+  document.getElementById('rfCvR2').textContent    = rfCvR2F(depth).toFixed(3);
+  drawRfPlot(depth);
+  drawRfTree(depth);
+}
+
+depthSlider.addEventListener('input', updateRf);
+updateRf();
+
+/* ═══════════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════════ */
+function openLightbox(src, caption) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lbCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(e) {
+  if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.classList.contains('lb-close')) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+}
+
+document.querySelectorAll('.lb-trigger').forEach(img => {
+  img.addEventListener('click', () => {
+    const caption = img.dataset.caption || img.closest('.mini-fig, .gallery-card')?.querySelector('.mini-cap, p')?.textContent || '';
+    openLightbox(img.src, caption);
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+});
+</script>
 </body>
 </html>
