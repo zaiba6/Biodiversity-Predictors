@@ -161,7 +161,7 @@
     .perf-row:last-child { border: none; }
     .perf-val { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: #e6f1fb; }
 
-    /* Discussion — finding cards */
+    /* Discussion - finding cards */
     .finding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
     .finding-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; border-top: 3px solid var(--ocean-accent); }
     .finding-card.blue { border-top-color: var(--ocean-mid); }
@@ -244,7 +244,7 @@
       <h1>Predicting Marine<br><em>Species Richness</em></h1>
       <p class="hero-sub">Which environmental and geographic factors drive biodiversity across the world's oceans? We compare regularized regression, generalized additive models, and tree-based methods across 1,619 BioTIME marine sampling sites.</p>
       <div class="hero-meta">
-        <div><strong>Spring 2026</strong>Prof. Eric Gerber</div>
+        <div><strong>Spring 2026</strong></div>div>
         <div><strong>Dataset</strong>BioTIME marine sites</div>
         <div><strong>Target</strong>log(species richness)</div>
       </div>
@@ -252,15 +252,15 @@
     <div class="hero-stats">
       <div class="stat-box accent"><span class="stat-num">1,619</span><span class="stat-lbl">Marine sites</span></div>
       <div class="stat-box"><span class="stat-num">27</span><span class="stat-lbl">Predictors</span></div>
-      <div class="stat-box coral-box"><span class="stat-num">0.7659</span><span class="stat-lbl">Best R²</span></div>
-      <div class="stat-box"><span class="stat-num">0.5687</span><span class="stat-lbl">Best RMSE</span></div>
+      <div class="stat-box coral-box"><span class="stat-num">0.696</span><span class="stat-lbl">Best R²</span></div>
+      <div class="stat-box"><span class="stat-num">0.638</span><span class="stat-lbl">Best RMSE</span></div>
     </div>
   </div>
 
   <!-- 01 Data Exploration -->
   <div class="section" id="exploration">
     <div class="section-header"><span class="section-num">01</span><h2>Data Exploration</h2></div>
-    <p class="section-desc">BioTIME marine sampling data cleaned to 1,619 globally distributed sites with 32 raw columns. After feature engineering, 27 predictors span geographic, climatic, habitat, and sampling dimensions. The response variable is <code>log_richness</code> — log-transformed species count per site.</p>
+    <p class="section-desc">BioTIME marine sampling data cleaned to 1,619 globally distributed sites with 32 raw columns. After feature engineering, 27 predictors span geographic, climatic, habitat, and sampling dimensions. The response variable is <code>log_richness</code> - log-transformed species count per site.</p>
     <div class="explore-grid">
       <div class="panel">
         <h3>Dataset at a glance</h3>
@@ -272,7 +272,7 @@
           <div class="metric-box"><div class="k">Split ratio</div><div class="v">80 / 20</div></div>
           <div class="metric-box"><div class="k">CV folds</div><div class="v">10-fold</div></div>
         </div>
-        <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure" class="lb-trigger" data-caption="Data exploration figure from all_forest.ipynb — distribution and structure of the dataset."></div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure" class="lb-trigger" data-caption="Data exploration figure from all_forest.ipynb - distribution and structure of the dataset."></div>
       </div>
       <div class="panel">
         <h3>Predictor families</h3>
@@ -282,7 +282,7 @@
           <div class="metric-box"><div class="k">Habitat</div><div class="v">depth, realm, biome, coastal</div></div>
           <div class="metric-box"><div class="k">Sampling</div><div class="v">n_years, n_samples, intensity</div></div>
         </div>
-        <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure" class="lb-trigger" data-caption="Second exploration figure — feature distributions and correlations."></div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure" class="lb-trigger" data-caption="Second exploration figure - feature distributions and correlations."></div>
       </div>
     </div>
   </div>
@@ -290,7 +290,7 @@
   <!-- 02 Methods -->
   <div class="section" id="methods">
     <div class="section-header"><span class="section-num">02</span><h2>Methods</h2></div>
-    <p class="section-desc">Three method families compared. Use the interactive controls in each panel — the plots update live as you drag.</p>
+    <p class="section-desc">Three method families compared. Use the interactive controls in each panel - the plots update live as you drag.</p>
 
     <div class="method-sections">
 
@@ -307,10 +307,10 @@
             </div>
           </div>
         </div>
-        <p class="method-desc"><strong>Ridge (ℓ²)</strong> shrinks all coefficients toward zero uniformly — no features are discarded. <strong>Lasso (ℓ¹)</strong> drives weak coefficients exactly to zero, performing automatic feature selection. <strong>Elastic Net</strong> blends both via an ℓ₁-ratio parameter. Optimal α chosen by cross-validation.</p>
+        <p class="method-desc"><strong>Ridge (ℓ²)</strong> shrinks all coefficients toward zero uniformly - no features are discarded. <strong>Lasso (ℓ¹)</strong> drives weak coefficients exactly to zero, performing automatic feature selection. <strong>Elastic Net</strong> blends both via an ℓ₁-ratio parameter. Optimal α chosen by cross-validation.</p>
 
         <div class="control-panel">
-          <div class="control-title">Interactive — Regularization Strength (α) Sensitivity</div>
+          <div class="control-title">Interactive - Regularization Strength (α) Sensitivity</div>
           <div class="model-tabs">
             <button class="model-tab active" onclick="setRegModel('ridge',this)">Ridge</button>
             <button class="model-tab" onclick="setRegModel('lasso',this)">Lasso</button>
@@ -330,8 +330,8 @@
         </div>
 
         <div class="error-grid">
-          <div class="ec hi"><div class="ec-label">RMSE</div><div class="ec-value" id="regRmse">0.5687</div></div>
-          <div class="ec hi"><div class="ec-label">R²</div><div class="ec-value" id="regR2">0.7659</div></div>
+          <div class="ec hi"><div class="ec-label">RMSE</div><div class="ec-value" id="regRmse">1.1410</div></div>
+          <div class="ec hi"><div class="ec-label">R²</div><div class="ec-value" id="regR2">0.0570</div></div>
           <div class="ec"><div class="ec-label">Active features</div><div class="ec-value" id="regFeatures">27 / 27</div></div>
           <div class="ec"><div class="ec-label">α (current)</div><div class="ec-value" id="regAlphaDisp">1.000</div></div>
         </div>
@@ -340,7 +340,7 @@
           <div class="feat-bar-label"><span>Features retained (non-zero coefficients)</span><span id="featBarLabel">27 / 27</span></div>
           <div class="feat-track"><div class="feat-fill" id="featFill" style="width:100%"></div></div>
         </div>
-        <p class="reg-note" id="regNote">Ridge shrinks all 27 features — none go to zero. Optimal α = 1.</p>
+        <p class="reg-note" id="regNote">Ridge shrinks all 27 features - none go to zero. Optimal α = 1.</p>
 
         <!-- Live RMSE-vs-alpha plot -->
         <div class="live-plot-wrap" style="margin-top:.85rem">
@@ -361,15 +361,15 @@
           <div>
             <div style="background:var(--ocean-mid);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Ridge (ℓ²)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_01.png" class="lb-trigger" data-caption="Ridge: Predicted vs Actual — scatter of model predictions against true log_richness. Tight clustering around the diagonal indicates good fit." alt="">
+              <img src="./assets/plots/regression_01.png" class="lb-trigger" data-caption="Ridge: Predicted vs Actual - scatter of model predictions against true log_richness. Tight clustering around the diagonal indicates good fit." alt="">
               <figcaption class="mini-cap">Predicted vs Actual</figcaption>
             </figure>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_04.png" class="lb-trigger" data-caption="Ridge residual diagnostics — checking linearity, homoscedasticity, and normality assumptions for the best-performing model." alt="">
+              <img src="./assets/plots/regression_04.png" class="lb-trigger" data-caption="Ridge residual diagnostics - checking linearity, homoscedasticity, and normality assumptions for the best-performing model." alt="">
               <figcaption class="mini-cap">Residual diagnostics</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_07.png" class="lb-trigger" data-caption="Ridge top 15 features by coefficient magnitude — all 27 features are retained but shrunk toward zero. The largest coefficients reveal the strongest environmental signals." alt="">
+              <img src="./assets/plots/regression_07.png" class="lb-trigger" data-caption="Ridge top 15 features by coefficient magnitude - all 27 features are retained but shrunk toward zero. The largest coefficients reveal the strongest environmental signals." alt="">
               <figcaption class="mini-cap">Top 15 features</figcaption>
             </figure>
           </div>
@@ -378,15 +378,15 @@
           <div>
             <div style="background:#1a7a5f;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Lasso (ℓ¹)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_02.png" class="lb-trigger" data-caption="Lasso: Predicted vs Actual — similar fit to Ridge with automatic feature selection zeroing out weak predictors." alt="">
+              <img src="./assets/plots/regression_02.png" class="lb-trigger" data-caption="Lasso: Predicted vs Actual - similar fit to Ridge with automatic feature selection zeroing out weak predictors." alt="">
               <figcaption class="mini-cap">Predicted vs Actual</figcaption>
             </figure>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_05.png" class="lb-trigger" data-caption="Lasso residual plot — residuals vs predicted values. No strong pattern indicates the model captures the main signal." alt="">
+              <img src="./assets/plots/regression_05.png" class="lb-trigger" data-caption="Lasso residual plot - residuals vs predicted values. No strong pattern indicates the model captures the main signal." alt="">
               <figcaption class="mini-cap">Residual plot</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_08.png" class="lb-trigger" data-caption="Lasso top 15 features by coefficient magnitude — features driven to zero are excluded, showing Lasso's built-in feature selection." alt="">
+              <img src="./assets/plots/regression_08.png" class="lb-trigger" data-caption="Lasso top 15 features by coefficient magnitude - features driven to zero are excluded, showing Lasso's built-in feature selection." alt="">
               <figcaption class="mini-cap">Top 15 features</figcaption>
             </figure>
           </div>
@@ -395,15 +395,15 @@
           <div>
             <div style="background:var(--coral);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Elastic Net (ℓ¹+ℓ²)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_03.png" class="lb-trigger" data-caption="ElasticNet: Predicted vs Actual — combines Ridge and Lasso penalties, blending shrinkage with sparsity." alt="">
+              <img src="./assets/plots/regression_03.png" class="lb-trigger" data-caption="ElasticNet: Predicted vs Actual - combines Ridge and Lasso penalties, blending shrinkage with sparsity." alt="">
               <figcaption class="mini-cap">Predicted vs Actual</figcaption>
             </figure>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_06.png" class="lb-trigger" data-caption="ElasticNet residual plot — residuals vs predicted values for the blended ℓ¹+ℓ² penalty model." alt="">
+              <img src="./assets/plots/regression_06.png" class="lb-trigger" data-caption="ElasticNet residual plot - residuals vs predicted values for the blended ℓ¹+ℓ² penalty model." alt="">
               <figcaption class="mini-cap">Residual plot</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_09.png" class="lb-trigger" data-caption="ElasticNet top 15 features — ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity with Ridge-style grouping of correlated features." alt="">
+              <img src="./assets/plots/regression_09.png" class="lb-trigger" data-caption="ElasticNet top 15 features - ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity with Ridge-style grouping of correlated features." alt="">
               <figcaption class="mini-cap">Top 15 features</figcaption>
             </figure>
           </div>
@@ -420,20 +420,20 @@
             <div class="badge-row">
               <span class="mbadge">Methods/GAMs.ipynb</span>
               <span class="mbadge">statsmodels GLMGam · BSplines</span>
-              <span class="mbadge">Target: species richness</span>
+              <span class="mbadge">Target: log_richness</span>
             </div>
           </div>
         </div>
-        <p class="method-desc">GAMs replace linear predictors with flexible smooth functions <em>s(x)</em> fitted using B-splines, capturing the nonlinear latitudinal diversity gradient, temperature response, and depth-dependent community shifts. The <strong>degrees of freedom (spline count)</strong> per smooth controls flexibility — too few underfits, too many overfits and AIC rises. Baseline: df = 4 per smooth, 3 smooths.</p>
+        <p class="method-desc">GAMs replace linear predictors with flexible smooth functions <em>s(x)</em> fitted using B-splines, capturing the nonlinear latitudinal diversity gradient, temperature response, and depth-dependent community shifts. The <strong>degrees of freedom (spline count)</strong> per smooth controls flexibility - too few underfits, too many overfits and AIC rises. Baseline: df = 4 per smooth, 3 smooths.</p>
 
         <div class="control-panel">
-          <div class="control-title">Interactive — Spline Count (Degrees of Freedom) per Smooth</div>
+          <div class="control-title">Interactive - Spline Count (Degrees of Freedom) per Smooth</div>
           <div class="slider-row">
             <span>Spline count (df)</span>
             <input id="splineSlider" type="range" min="4" max="20" value="4" />
             <span id="splineVal" class="slider-value">4</span>
           </div>
-          <p class="slider-hint">Baseline is df = 4. Curves update live — watch them grow wigglier as df increases.</p>
+          <p class="slider-hint">Baseline is df = 4. Curves update live - watch them grow wigglier as df increases.</p>
         </div>
 
         <div class="error-grid">
@@ -444,20 +444,20 @@
         </div>
 
         <hr class="method-divider">
-        <h3 style="margin-bottom:.35rem">Partial effect plots — smooth terms</h3>
+        <h3 style="margin-bottom:.35rem">Partial effect plots - smooth terms</h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:.5rem">Each curve shows the effect of one predictor on species richness, holding others at their mean. The shaded band is the 95% CI. Drag the slider above to see how spline count changes the curve shape.</p>
         <div class="plot-grid-3">
           <figure class="mini-fig">
             <svg id="gamSvg_lat" viewBox="0 0 300 160"></svg>
-            <figcaption class="mini-cap">s(abs_latitude) — distance from equator</figcaption>
+            <figcaption class="mini-cap">s(abs_latitude) - distance from equator</figcaption>
           </figure>
           <figure class="mini-fig">
             <svg id="gamSvg_temp" viewBox="0 0 300 160"></svg>
-            <figcaption class="mini-cap">s(temp_proxy) — sea surface temperature proxy</figcaption>
+            <figcaption class="mini-cap">s(temp_proxy) - sea surface temperature proxy</figcaption>
           </figure>
           <figure class="mini-fig">
             <svg id="gamSvg_depth" viewBox="0 0 300 160"></svg>
-            <figcaption class="mini-cap">s(mean_depth) — ocean sampling depth</figcaption>
+            <figcaption class="mini-cap">s(mean_depth) - ocean sampling depth</figcaption>
           </figure>
         </div>
       </div>
@@ -475,10 +475,10 @@
             </div>
           </div>
         </div>
-        <p class="method-desc">Three tree-based approaches capture nonlinear interactions without explicit feature engineering. The <strong>Random Forest</strong> (100 trees, bagging + feature subsampling) reduces variance. The <strong>sklearn DecisionTreeRegressor</strong> provides a single-tree baseline. A <strong>from-scratch implementation</strong> serves as a pedagogical comparison. Max depth controls complexity — too shallow misses structure, too deep memorises noise.</p>
+        <p class="method-desc">Three tree-based approaches capture nonlinear interactions without explicit feature engineering. The <strong>Random Forest</strong> (100 trees, bagging + feature subsampling) reduces variance. The <strong>sklearn DecisionTreeRegressor</strong> provides a single-tree baseline. A <strong>from-scratch implementation</strong> serves as a pedagogical comparison. Max depth controls complexity - too shallow misses structure, too deep memorises noise.</p>
 
         <div class="control-panel">
-          <div class="control-title">Interactive — Max Tree Depth (Random Forest)</div>
+          <div class="control-title">Interactive - Max Tree Depth (Random Forest)</div>
           <div class="slider-row">
             <span>Max depth</span>
             <input id="depthSlider" type="range" min="2" max="20" value="10" />
@@ -488,10 +488,10 @@
         </div>
 
         <div class="error-grid">
-          <div class="ec hi"><div class="ec-label">Test RMSE</div><div class="ec-value" id="rfRmse">0.755</div></div>
-          <div class="ec hi"><div class="ec-label">Test R²</div><div class="ec-value" id="rfR2">0.598</div></div>
-          <div class="ec"><div class="ec-label">CV RMSE (10-fold)</div><div class="ec-value" id="rfCvRmse">0.705</div></div>
-          <div class="ec"><div class="ec-label">CV R² (10-fold)</div><div class="ec-value" id="rfCvR2">0.661</div></div>
+          <div class="ec hi"><div class="ec-label">Test RMSE</div><div class="ec-value" id="rfRmse">0.638</div></div>
+          <div class="ec hi"><div class="ec-label">Test R²</div><div class="ec-value" id="rfR2">0.696</div></div>
+          <div class="ec"><div class="ec-label">CV RMSE (10-fold)</div><div class="ec-value" id="rfCvRmse">0.638</div></div>
+          <div class="ec"><div class="ec-label">CV R² (10-fold)</div><div class="ec-value" id="rfCvR2">0.696</div></div>
         </div>
 
         <!-- Live depth vs RMSE plot -->
@@ -506,10 +506,10 @@
         <hr class="method-divider">
         <h3 style="margin-bottom:.5rem">Model comparison within tree family</h3>
         <div class="metric-row" style="margin-top:.4rem;margin-bottom:1rem">
-          <div class="metric-box"><div class="k">Random Forest</div><div class="v">R² 0.598 | RMSE 0.755</div></div>
-          <div class="metric-box"><div class="k">Sklearn Tree</div><div class="v">R² 0.529 | RMSE 0.818</div></div>
-          <div class="metric-box"><div class="k">From-scratch Tree</div><div class="v">R² 0.394 | RMSE 0.927</div></div>
-          <div class="metric-box"><div class="k">RF CV (10-fold)</div><div class="v">R² 0.661 ± 0.056</div></div>
+          <div class="metric-box"><div class="k">Random Forest</div><div class="v">R² 0.696 | RMSE 0.638</div></div>
+          <div class="metric-box"><div class="k">Sklearn Tree</div><div class="v">R² 0.654 | RMSE 0.670</div></div>
+          <div class="metric-box"><div class="k">From-scratch Tree</div><div class="v">R² 0.585 | RMSE 0.733</div></div>
+          <div class="metric-box"><div class="k">RF CV (10-fold)</div><div class="v">R² 0.696 ± 0.032</div></div>
         </div>
 
         <h3 style="margin-bottom:.75rem">Tree-based output plots</h3>
@@ -517,38 +517,38 @@
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_03.png" alt="Feature importance" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
-              data-caption="Random Forest feature importance — environmental predictors ranked by mean decrease in variance. Mean depth and sampling intensity are the top drivers.">
-            <figcaption class="mini-cap">Random Forest — feature importance by predictor</figcaption>
+              data-caption="Random Forest feature importance - environmental predictors ranked by mean decrease in variance. Mean depth and sampling intensity are the top drivers.">
+            <figcaption class="mini-cap">Random Forest - feature importance by predictor</figcaption>
           </figure>
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_07.png" alt="Tree structure" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
-              data-caption="From-scratch decision tree (top 3 levels shown) — recursive partitioning of the environmental feature space, illustrating how splits are chosen at each node.">
+              data-caption="From-scratch decision tree (top 3 levels shown) - recursive partitioning of the environmental feature space, illustrating how splits are chosen at each node.">
             <figcaption class="mini-cap">From-scratch decision tree structure (top 3 levels)</figcaption>
           </figure>
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_04.png" alt="all_forest_04" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output — all_forest_04. Additional feature importance or model diagnostic from the tree/forest notebook.">
-            <figcaption class="mini-cap">all_forest_04 — feature importance comparison</figcaption>
+              data-caption="Tree model output - all_forest_04. Additional feature importance or model diagnostic from the tree/forest notebook.">
+            <figcaption class="mini-cap">all_forest_04 - feature importance comparison</figcaption>
           </figure>
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_05.png" alt="all_forest_05" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output — all_forest_05. Cross-validation error analysis or model performance curves from the tree/forest notebook.">
-            <figcaption class="mini-cap">all_forest_05 — model performance analysis</figcaption>
+              data-caption="Tree model output - all_forest_05. Cross-validation error analysis or model performance curves from the tree/forest notebook.">
+            <figcaption class="mini-cap">all_forest_05 - model performance analysis</figcaption>
           </figure>
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_06.png" alt="all_forest_06" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output — all_forest_06. Predicted vs actual or residual scatter for the tree-based models.">
-            <figcaption class="mini-cap">all_forest_06 — predicted vs actual</figcaption>
+              data-caption="Tree model output - all_forest_06. Predicted vs actual or residual scatter for the tree-based models.">
+            <figcaption class="mini-cap">all_forest_06 - predicted vs actual</figcaption>
           </figure>
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_08.png" alt="all_forest_08" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output — all_forest_08. Feature importance ranking from an alternative tree configuration or RFECV selection.">
-            <figcaption class="mini-cap">all_forest_08 — feature importance (RFECV / alt model)</figcaption>
+              data-caption="Tree model output - all_forest_08. Feature importance ranking from an alternative tree configuration or RFECV selection.">
+            <figcaption class="mini-cap">all_forest_08 - feature importance (RFECV / alt model)</figcaption>
           </figure>
 
         </div>
@@ -560,39 +560,39 @@
   <!-- 03 Results -->
   <div class="section" id="results">
     <div class="section-header"><span class="section-num">03</span><h2>Results</h2></div>
-    <p class="section-desc">All methods trained on an 80/20 split (1,295 train / 324 test). Regression uses <code>log_richness</code>; tree models use <code>log_density</code>. Ridge achieves the highest test R² of 0.7659.</p>
+    <p class="section-desc">All methods trained on an 80/20 split (1,295 train / 324 test). Regression uses <code>log_richness</code>; tree models use <code>log_density</code>. Random Forest achieves the best test R² of 0.696, outperforming linear models (Ridge R² = 0.057) and GAMs (R² = 0.104).</p>
     <div class="results-layout">
       <div>
         <table class="result-table">
           <thead><tr><th>Method</th><th>Family</th><th>RMSE</th><th>R²</th></tr></thead>
           <tbody>
-            <tr class="best"><td><strong>Ridge</strong></td><td>Regression</td><td>0.5687</td><td><span class="pill pos">0.7659</span></td></tr>
-            <tr><td>Lasso</td><td>Regression</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
-            <tr><td>Elastic Net</td><td>Regression</td><td>0.5690</td><td><span class="pill pos">0.7656</span></td></tr>
-            <tr><td>Random Forest</td><td>Tree</td><td>0.755</td><td><span class="pill neu">0.598</span></td></tr>
-            <tr><td>Sklearn Tree</td><td>Tree</td><td>0.818</td><td><span class="pill neu">0.529</span></td></tr>
-            <tr><td>From-scratch Tree</td><td>Tree</td><td>0.927</td><td><span class="pill neg">0.394</span></td></tr>
+            <tr class="best"><td><strong>Random Forest</strong></td><td>Tree</td><td>0.638</td><td><span class="pill pos">0.696</span></td></tr>
+            <tr><td>Sklearn Tree</td><td>Tree</td><td>0.670</td><td><span class="pill pos">0.654</span></td></tr>
+            <tr><td>From-scratch Tree</td><td>Tree</td><td>0.733</td><td><span class="pill neu">0.585</span></td></tr>
+            <tr><td>Ridge</td><td>Regression</td><td>1.141</td><td><span class="pill neg">0.057</span></td></tr>
+            <tr><td>Lasso</td><td>Regression</td><td>1.416</td><td><span class="pill neg">0.056</span></td></tr>
+            <tr><td>Elastic Net</td><td>Regression</td><td>1.416</td><td><span class="pill neg">0.056</span></td></tr>
             <tr><td>GAM</td><td>GAM</td><td>1.111</td><td><span class="pill neg">0.104</span></td></tr>
           </tbody>
         </table>
         <h3 style="margin-top:1.25rem;margin-bottom:.5rem;font-size:13px">R² comparison</h3>
         <div class="r2-bars">
-          <div class="r2-row"><span class="r2-name">Ridge</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
-          <div class="r2-row"><span class="r2-name">Lasso</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
-          <div class="r2-row"><span class="r2-name">Elastic Net</span><div class="r2-track"><div class="r2-fill" style="width:76.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.766</span></div>
-          <div class="r2-row"><span class="r2-name">Random Forest</span><div class="r2-track"><div class="r2-fill" style="width:59.8%;background:var(--ocean-mid)"></div></div><span class="r2-val">0.598</span></div>
-          <div class="r2-row"><span class="r2-name">Sklearn Tree</span><div class="r2-track"><div class="r2-fill" style="width:52.9%;background:var(--ocean-mid)"></div></div><span class="r2-val">0.529</span></div>
-          <div class="r2-row"><span class="r2-name">Scratch Tree</span><div class="r2-track"><div class="r2-fill" style="width:39.4%;background:#c9a56e"></div></div><span class="r2-val">0.394</span></div>
+          <div class="r2-row"><span class="r2-name">Random Forest</span><div class="r2-track"><div class="r2-fill" style="width:69.6%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.696</span></div>
+          <div class="r2-row"><span class="r2-name">Sklearn Tree</span><div class="r2-track"><div class="r2-fill" style="width:65.4%;background:var(--ocean-accent)"></div></div><span class="r2-val">0.654</span></div>
+          <div class="r2-row"><span class="r2-name">Scratch Tree</span><div class="r2-track"><div class="r2-fill" style="width:58.5%;background:var(--ocean-mid)"></div></div><span class="r2-val">0.585</span></div>
           <div class="r2-row"><span class="r2-name">GAM</span><div class="r2-track"><div class="r2-fill" style="width:10.4%;background:#c9a56e"></div></div><span class="r2-val">0.104</span></div>
+          <div class="r2-row"><span class="r2-name">Ridge</span><div class="r2-track"><div class="r2-fill" style="width:5.7%;background:#c9a56e"></div></div><span class="r2-val">0.057</span></div>
+          <div class="r2-row"><span class="r2-name">Lasso</span><div class="r2-track"><div class="r2-fill" style="width:5.6%;background:#c9a56e"></div></div><span class="r2-val">0.056</span></div>
+          <div class="r2-row"><span class="r2-name">Elastic Net</span><div class="r2-track"><div class="r2-fill" style="width:5.6%;background:#c9a56e"></div></div><span class="r2-val">0.056</span></div>
         </div>
       </div>
       <div class="perf-box">
         <h3>Cross-validation snapshot</h3>
-        <div class="perf-row"><span>RF 10-fold CV RMSE</span><span class="perf-val">0.705 ± 0.051</span></div>
-        <div class="perf-row"><span>RF 10-fold CV R²</span><span class="perf-val">0.661 ± 0.056</span></div>
-        <div class="perf-row"><span>Best model (test)</span><span class="perf-val">Ridge</span></div>
-        <div class="perf-row"><span>Best R²</span><span class="perf-val">0.7659</span></div>
-        <div class="perf-row"><span>Best RMSE</span><span class="perf-val">0.5687</span></div>
+        <div class="perf-row"><span>RF 10-fold CV RMSE</span><span class="perf-val">0.638 ± 0.043</span></div>
+        <div class="perf-row"><span>RF 10-fold CV R²</span><span class="perf-val">0.696 ± 0.032</span></div>
+        <div class="perf-row"><span>Best model (test)</span><span class="perf-val">Random Forest</span></div>
+        <div class="perf-row"><span>Best R²</span><span class="perf-val">0.696</span></div>
+        <div class="perf-row"><span>Best RMSE</span><span class="perf-val">0.638</span></div>
         <div class="perf-row"><span>Ridge optimal α</span><span class="perf-val">1.0</span></div>
         <div class="perf-row"><span>Lasso optimal α</span><span class="perf-val">0.001</span></div>
         <div class="perf-row"><span>EN α / ℓ₁-ratio</span><span class="perf-val">0.001 / 0.8</span></div>
@@ -608,59 +608,59 @@
     <div class="finding-highlight">
       <div class="finding-highlight-icon">★</div>
       <div>
-        <h4>Bottom line: linear structure wins, but each method tells a different story</h4>
-        <p>Regularized regression (R² ≈ 0.77) outperforms tree-based methods and GAMs on this dataset — but the richer insight comes from combining all three. Ridge quantifies the linear gradients, GAMs reveal their shape, and Random Forest shows which features matter most when interactions are allowed.</p>
+        <h4>Bottom line: non-linear methods win, but each approach tells a different story</h4>
+        <p>Random Forest (R² ≈ 0.696) outperforms regularized regression (R² ≈ 0.057) and GAMs (R² ≈ 0.104), confirming that marine biodiversity relationships are inherently non-linear. The richer insight comes from combining all three: Ridge quantifies weak linear gradients, GAMs reveal the shape of ecological curves, and Random Forest captures the feature interactions that drive most of the variance.</p>
       </div>
     </div>
 
     <div class="finding-grid">
       <div class="finding-card">
-        <div class="finding-num">01 — REGRESSION</div>
-        <h4>Strong linear structure in log-richness</h4>
-        <p>After log-transforming species richness, the variance is largely explained by linear combinations of environmental features. This is consistent with the species–area relationship and latitudinal diversity gradient — both of which are approximately log-linear in their classic forms.</p>
+        <div class="finding-num">01 - REGRESSION</div>
+        <h4>Linear models underperform - relationships are non-linear</h4>
+        <p>Even with regularization, Ridge, Lasso, and Elastic Net all achieve R² ≈ 0.057 - explaining less than 6% of variance. This confirms that marine biodiversity cannot be captured by linear combinations of environmental features; the dominant drivers (longitude, depth, temperature) interact in fundamentally non-linear ways.</p>
       </div>
       <div class="finding-card blue">
-        <div class="finding-num">02 — GEOGRAPHY</div>
+        <div class="finding-num">02 - GEOGRAPHY</div>
         <h4>Latitude is the dominant predictor</h4>
-        <p>abs_latitude ranks highest across all methods. The well-documented poleward decline in marine species richness — driven by temperature, primary productivity, and evolutionary history — is the single strongest signal in this dataset.</p>
+        <p>abs_latitude ranks highest across all methods. The well-documented poleward decline in marine species richness - driven by temperature, primary productivity, and evolutionary history - is the single strongest signal in this dataset.</p>
       </div>
       <div class="finding-card coral">
-        <div class="finding-num">03 — RANDOM FOREST</div>
+        <div class="finding-num">03 - RANDOM FOREST</div>
         <h4>Ensemble stability over raw accuracy</h4>
-        <p>Random Forest CV R² of 0.661 ± 0.056 shows stable generalisation across folds. Though it trails regularized regression on the raw test set, it captures depth × temperature interactions implicitly — relationships the GAM makes explicit through smooth terms.</p>
+        <p>Random Forest CV R² of 0.696 ± 0.032 shows stable generalisation across folds and is the best-performing model overall. It captures depth × temperature interactions implicitly - relationships the GAM makes explicit through smooth terms - while far outpacing regularized regression (R² ≈ 0.057).</p>
       </div>
       <div class="finding-card kelp">
-        <div class="finding-num">04 — GAMs</div>
+        <div class="finding-num">04 - GAMs</div>
         <h4>Interpretable curves over prediction power</h4>
         <p>GAMs achieve lower R² (0.104) than competitors but provide the most ecologically interpretable output: smooth partial-effect curves for latitude, temperature, and depth each tell a biologically coherent story, useful for communicating gradients to non-technical audiences.</p>
       </div>
       <div class="finding-card blue">
-        <div class="finding-num">05 — LASSO / ELASTIC NET</div>
+        <div class="finding-num">05 - LASSO / ELASTIC NET</div>
         <h4>Automatic feature selection agrees with theory</h4>
-        <p>At optimal α, Lasso retains ~20 of 27 features — zeroing out several correlated geographic proxies. The retained set aligns with ecological priors: latitude, temperature, depth, and sampling effort are kept; redundant interaction terms and proxies are pruned.</p>
+        <p>At optimal α, Lasso retains ~20 of 27 features - zeroing out several correlated geographic proxies. The retained set aligns with ecological priors: latitude, temperature, depth, and sampling effort are kept; redundant interaction terms and proxies are pruned.</p>
       </div>
       <div class="finding-card">
-        <div class="finding-num">06 — DECISION TREES</div>
+        <div class="finding-num">06 - DECISION TREES</div>
         <h4>Implementation details matter</h4>
-        <p>The from-scratch tree (R² = 0.394) versus sklearn (R² = 0.529) gap illustrates how split-point search, tie-breaking, and minimum-leaf-size heuristics — not just the core algorithm — drive predictive performance in practice.</p>
+        <p>The from-scratch tree (R² = 0.585) versus sklearn (R² = 0.654) gap illustrates how split-point search, tie-breaking, and minimum-leaf-size heuristics - not just the core algorithm - drive predictive performance in practice.</p>
       </div>
     </div>
 
     <h3 style="margin-bottom:.5rem;margin-top:.5rem">Key plots</h3>
     <div class="gallery-grid">
       <div class="gallery-card">
-        <h3>GAM — latitude gradient</h3>
-        <img src="./assets/plots/gams_01.png" alt="GAM latitude smooth" class="lb-trigger" data-caption="GAM smooth partial effect for abs_latitude — showing how species richness declines with distance from the equator. This is the latitudinal diversity gradient, one of ecology's oldest and most robust patterns.">
+        <h3>GAM - latitude gradient</h3>
+        <img src="./assets/plots/gams_01.png" alt="GAM latitude smooth" class="lb-trigger" data-caption="GAM smooth partial effect for abs_latitude - showing how species richness declines with distance from the equator. This is the latitudinal diversity gradient, one of ecology's oldest and most robust patterns.">
         <p>Smooth relationship between absolute latitude and species richness. Source: <code>GAMs.ipynb</code></p>
       </div>
       <div class="gallery-card">
-        <h3>Random Forest — feature importance</h3>
-        <img src="./assets/plots/all_forest_03.png" alt="RF feature importance" class="lb-trigger" data-caption="Random Forest feature importance scores — which environmental predictors drive marine biodiversity predictions most strongly when nonlinear interactions are allowed.">
+        <h3>Random Forest - feature importance</h3>
+        <img src="./assets/plots/all_forest_03.png" alt="RF feature importance" class="lb-trigger" data-caption="Random Forest feature importance scores - which environmental predictors drive marine biodiversity predictions most strongly when nonlinear interactions are allowed.">
         <p>Environmental variables ranked by predictive contribution. Source: <code>all_forest.ipynb</code></p>
       </div>
       <div class="gallery-card">
-        <h3>Regression — coefficient magnitudes</h3>
-        <img src="./assets/plots/regression_07.png" alt="Regression coefficients" class="lb-trigger" data-caption="Coefficient magnitudes for Ridge, Lasso, and Elastic Net — showing shrinkage and feature selection patterns. Lasso zeroes out redundant predictors while Ridge distributes weight across all 27 features.">
+        <h3>Regression - coefficient magnitudes</h3>
+        <img src="./assets/plots/regression_07.png" alt="Regression coefficients" class="lb-trigger" data-caption="Coefficient magnitudes for Ridge, Lasso, and Elastic Net - showing shrinkage and feature selection patterns. Lasso zeroes out redundant predictors while Ridge distributes weight across all 27 features.">
         <p>Shrinkage patterns across all three regularization strategies. Source: <code>Regression.ipynb</code></p>
       </div>
     </div>
@@ -671,15 +671,14 @@
     <div class="section-header"><span class="section-num">05</span><h2>Team</h2></div>
     <div class="team-row">
       <div class="team-pill"><strong>Zaiba</strong><span>GAM methods &amp; implementation</span></div>
-      <div class="team-pill"><strong>Group member</strong><span>Data preprocessing &amp; feature engineering</span></div>
-      <div class="team-pill"><strong>Group member</strong><span>Tree models &amp; visualization</span></div>
-      <div class="team-pill"><strong>Group member</strong><span>Regression &amp; write-up</span></div>
+      <div class="team-pill"><strong>Jules</strong><span>Tree models &amp; implementation</span></div>
+      <div class="team-pill"><strong>Inaya</strong><span>Regression &amp; implementation</span></div>
     </div>
   </div>
 
   <footer>
     <div><strong>Marine Biodiversity &amp; Species Richness Predictors</strong> · MATH 6243 Statistical Learning · Spring 2026</div>
-    <div>Prof. Eric Gerber · BioTIME Dataset</div>
+    <div>BioTIME Dataset</div>
   </footer>
 
 </div><!-- end .site -->
@@ -833,14 +832,14 @@ function drawGamPlot(svgId, predictor, df) {
 }
 
 /* ═══════════════════════════════════════════
-   REGRESSION — alpha slider + RMSE curve
+   REGRESSION - alpha slider + RMSE curve
 ═══════════════════════════════════════════ */
 let regModel = 'ridge';
 
 const regCfg = {
-  ridge:   {optAlpha: 1.0,   baseRmse: 0.5687, baseR2: 0.7659, rmseK: 0.038, r2K: 0.055, sparse: false, note: 'Ridge (ℓ²) shrinks all 27 coefficients — none reach zero. Optimal α = 1.'},
-  lasso:   {optAlpha: 0.001, baseRmse: 0.5690, baseR2: 0.7656, rmseK: 0.10,  r2K: 0.085, sparse: true,  note: 'Lasso (ℓ¹) zeroes out weak predictors. At optimal α = 0.001, ~20 features remain active.'},
-  elastic: {optAlpha: 0.001, baseRmse: 0.5690, baseR2: 0.7656, rmseK: 0.10,  r2K: 0.085, sparse: true,  note: 'Elastic Net blends ℓ¹+ℓ² penalties. ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity. Optimal α = 0.001.'}
+  ridge:   {optAlpha: 1.0,   baseRmse: 1.141,  baseR2: 0.057,  rmseK: 0.038, r2K: 0.008, sparse: false, note: 'Ridge (ℓ²) shrinks all 27 coefficients - none reach zero. Optimal α = 1.'},
+  lasso:   {optAlpha: 0.001, baseRmse: 1.416,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Lasso (ℓ¹) zeroes out weak predictors. At optimal α = 0.001, ~20 features remain active.'},
+  elastic: {optAlpha: 0.001, baseRmse: 1.416,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Elastic Net blends ℓ¹+ℓ² penalties. ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity. Optimal α = 0.001.'}
 };
 
 // Slider 1-100 maps to alpha = optAlpha × 10^((s-50)/22)
@@ -968,7 +967,7 @@ function setRegModel(model, btn) {
 }
 
 /* ═══════════════════════════════════════════
-   REGRESSION — live coefficient bar chart
+   REGRESSION - live coefficient bar chart
 ═══════════════════════════════════════════ */
 const regFeatures = [
   {name: 'abs_latitude', ridge: -0.48, lasso: -0.51, elastic: -0.50},
@@ -1011,10 +1010,10 @@ function drawRegCoefPlot(sliderVal) {
   const modelLabel = regModel === 'ridge' ? 'Ridge' : regModel === 'lasso' ? 'Lasso' : 'Elastic Net';
   svg.appendChild(el('text', {x: W/2, y: 13, 'font-size': 8, 'text-anchor': 'middle',
     fill: '#333', 'font-weight': 'bold', 'font-family': 'sans-serif'},
-    `Coefficient magnitudes \u2014 ${modelLabel} at current \u03b1`));
+    `Coefficient magnitudes - ${modelLabel} at current \u03b1`));
 
   const coefs = regFeatures.map((f, i) => ({name: f.name, val: scaledCoef(f[coefKey], d, cfg.sparse, i)}));
-  // Fixed scale based on optimal coefficients — bars visually shrink/grow as alpha changes
+  // Fixed scale based on optimal coefficients - bars visually shrink/grow as alpha changes
   const maxAbs = Math.max(...regFeatures.map(f => Math.abs(f[coefKey])), 0.01);
   const barH = (PH / coefs.length) - 2;
   const midX = P.l + PW * 0.42;
@@ -1050,7 +1049,7 @@ document.getElementById('l1Slider').addEventListener('input', computeReg);
 computeReg();
 
 /* ═══════════════════════════════════════════
-   GAM — spline slider
+   GAM - spline slider
 ═══════════════════════════════════════════ */
 const splineSlider = document.getElementById('splineSlider');
 
@@ -1077,15 +1076,15 @@ splineSlider.addEventListener('input', updateGam);
 updateGam();
 
 /* ═══════════════════════════════════════════
-   RANDOM FOREST — depth slider + bias-variance plot
+   RANDOM FOREST - depth slider + bias-variance plot
 ═══════════════════════════════════════════ */
 const depthSlider = document.getElementById('depthSlider');
 
 // Model: test RMSE worse at both extremes; CV RMSE more stable at high depth
-function rfTestRmse(d)  { return 0.755 + (d < 10 ? 0.0033 : 0.0024) * Math.pow(d - 10, 2); }
-function rfCvRmseF(d)   { return 0.705 + (d < 10 ? 0.0024 : 0.0015) * Math.pow(d - 10, 2); }
-function rfTestR2(d)    { return clamp(0.598 - (d < 10 ? 0.0022 : 0.0016) * Math.pow(d - 10, 2), 0.20, 0.80); }
-function rfCvR2F(d)     { return clamp(0.661 - (d < 10 ? 0.0016 : 0.0010) * Math.pow(d - 10, 2), 0.25, 0.85); }
+function rfTestRmse(d)  { return 0.638 + (d < 10 ? 0.0033 : 0.0024) * Math.pow(d - 10, 2); }
+function rfCvRmseF(d)   { return 0.638 + (d < 10 ? 0.0024 : 0.0015) * Math.pow(d - 10, 2); }
+function rfTestR2(d)    { return clamp(0.696 - (d < 10 ? 0.0022 : 0.0016) * Math.pow(d - 10, 2), 0.20, 0.85); }
+function rfCvR2F(d)     { return clamp(0.696 - (d < 10 ? 0.0016 : 0.0010) * Math.pow(d - 10, 2), 0.25, 0.90); }
 
 function drawRfPlot(currentDepth) {
   const svg = document.getElementById('rfPlot');
@@ -1161,7 +1160,7 @@ function drawRfPlot(currentDepth) {
 }
 
 /* ═══════════════════════════════════════════
-   RANDOM FOREST — live tree structure diagram
+   RANDOM FOREST - live tree structure diagram
 ═══════════════════════════════════════════ */
 function drawRfTree(depth) {
   const svg = document.getElementById('rfTree');
@@ -1247,13 +1246,13 @@ function drawRfTree(depth) {
   // Title
   svg.appendChild(el('text', {x: W/2, y: 14, 'font-size': 8.5, 'text-anchor': 'middle',
     fill: '#333', 'font-weight': 'bold', 'font-family': 'sans-serif'},
-    `Decision Tree Structure \u2014 max_depth = ${depth}`));
+    `Decision Tree Structure - max_depth = ${depth}`));
 
   if (depth > 4) {
     const est = Math.pow(2, Math.min(depth, 15));
     svg.appendChild(el('text', {x: W/2, y: H-8, 'font-size': 7, 'text-anchor': 'middle',
       fill: '#aaa', 'font-style': 'italic', 'font-family': 'sans-serif'},
-      `+ ${depth - 4} more depth levels \u2014 \u2248${est.toLocaleString()} leaves per tree in full forest`));
+      `+ ${depth - 4} more depth levels - \u2248${est.toLocaleString()} leaves per tree in full forest`));
   }
 }
 
