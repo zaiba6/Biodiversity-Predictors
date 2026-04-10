@@ -244,7 +244,7 @@
       <h1>Predicting Marine<br><em>Species Richness</em></h1>
       <p class="hero-sub">Which environmental and geographic factors drive biodiversity across the world's oceans? We compare regularized regression, generalized additive models, and tree-based methods across 1,619 BioTIME marine sampling sites.</p>
       <div class="hero-meta">
-        <div><strong>Spring 2026</strong></div>div>
+        <div><strong>Spring 2026</strong></div>
         <div><strong>Dataset</strong>BioTIME marine sites</div>
         <div><strong>Target</strong>log(species richness)</div>
       </div>
@@ -272,17 +272,17 @@
           <div class="metric-box"><div class="k">Split ratio</div><div class="v">80 / 20</div></div>
           <div class="metric-box"><div class="k">CV folds</div><div class="v">10-fold</div></div>
         </div>
-        <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Exploration figure" class="lb-trigger" data-caption="Data exploration figure from all_forest.ipynb - distribution and structure of the dataset."></div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_01.png" alt="Log density distribution" class="lb-trigger" data-caption="Distribution of species density before and after log transformation. Raw density (left) is heavily right-skewed. Log-transformed density (right) produces an approximately symmetric distribution suitable for regression."></div>
       </div>
       <div class="panel">
         <h3>Predictor families</h3>
         <div class="metric-row">
-          <div class="metric-box"><div class="k">Geographic</div><div class="v">lat, lon, dist_equator, area</div></div>
-          <div class="metric-box"><div class="k">Climatic</div><div class="v">temp_proxy, precip, tropical</div></div>
-          <div class="metric-box"><div class="k">Habitat</div><div class="v">depth, realm, biome, coastal</div></div>
-          <div class="metric-box"><div class="k">Sampling</div><div class="v">n_years, n_samples, intensity</div></div>
+          <div class="metric-box"><div class="k">Geographic</div><div class="v">lat, lon, abs_lat, dist_equator</div></div>
+          <div class="metric-box"><div class="k">Climatic</div><div class="v">temp_proxy, temp_squared, temp_range, precip</div></div>
+          <div class="metric-box"><div class="k">Habitat</div><div class="v">mean_depth, coastal_proxy, productivity</div></div>
+          <div class="metric-box"><div class="k">Sampling</div><div class="v">sampling_intensity, temp_x_precip</div></div>
         </div>
-        <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Second exploration figure" class="lb-trigger" data-caption="Second exploration figure - feature distributions and correlations."></div>
+        <div class="img-wrap"><img src="./assets/plots/all_forest_02.png" alt="Species richness distribution" class="lb-trigger" data-caption="Distribution of species richness before and after log transformation. Raw richness (left) shows heavy right skew. Log transformation (right) normalises the distribution for regression modeling."></div>
       </div>
     </div>
   </div>
@@ -307,7 +307,7 @@
             </div>
           </div>
         </div>
-        <p class="method-desc"><strong>Ridge (ℓ²)</strong> shrinks all coefficients toward zero uniformly - no features are discarded. <strong>Lasso (ℓ¹)</strong> drives weak coefficients exactly to zero, performing automatic feature selection. <strong>Elastic Net</strong> blends both via an ℓ₁-ratio parameter. Optimal α chosen by cross-validation.</p>
+        <p class="method-desc"><strong>Ridge (ℓ²)</strong> shrinks all coefficients toward zero uniformly - no features are discarded. <strong>Lasso (ℓ¹)</strong> drives weak coefficients exactly to zero, performing automatic feature selection. <strong>Elastic Net</strong> blends both via an ℓ₁-ratio parameter. Optimal α chosen by 5-fold cross-validation. After VIF filtering (threshold = 10), <strong>5 predictors</strong> were retained: LATITUDE, temp_squared, mean_depth, precip_proxy, sampling_intensity.</p>
 
         <div class="control-panel">
           <div class="control-title">Interactive - Regularization Strength (α) Sensitivity</div>
@@ -332,15 +332,15 @@
         <div class="error-grid">
           <div class="ec hi"><div class="ec-label">RMSE</div><div class="ec-value" id="regRmse">1.1410</div></div>
           <div class="ec hi"><div class="ec-label">R²</div><div class="ec-value" id="regR2">0.0570</div></div>
-          <div class="ec"><div class="ec-label">Active features</div><div class="ec-value" id="regFeatures">27 / 27</div></div>
+          <div class="ec"><div class="ec-label">Active features</div><div class="ec-value" id="regFeatures">5 / 5</div></div>
           <div class="ec"><div class="ec-label">α (current)</div><div class="ec-value" id="regAlphaDisp">1.000</div></div>
         </div>
 
         <div class="feat-bar-wrap">
-          <div class="feat-bar-label"><span>Features retained (non-zero coefficients)</span><span id="featBarLabel">27 / 27</span></div>
+          <div class="feat-bar-label"><span>Features retained (non-zero coefficients)</span><span id="featBarLabel">5 / 5</span></div>
           <div class="feat-track"><div class="feat-fill" id="featFill" style="width:100%"></div></div>
         </div>
-        <p class="reg-note" id="regNote">Ridge shrinks all 27 features - none go to zero. Optimal α = 1.</p>
+        <p class="reg-note" id="regNote">Ridge shrinks all 5 VIF-filtered features - none go to zero. Optimal α = 67.23.</p>
 
         <!-- Live RMSE-vs-alpha plot -->
         <div class="live-plot-wrap" style="margin-top:.85rem">
@@ -361,16 +361,12 @@
           <div>
             <div style="background:var(--ocean-mid);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Ridge (ℓ²)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_01.png" class="lb-trigger" data-caption="Ridge: Predicted vs Actual - scatter of model predictions against true log_richness. Tight clustering around the diagonal indicates good fit." alt="">
-              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
-            </figure>
-            <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_04.png" class="lb-trigger" data-caption="Ridge residual diagnostics - checking linearity, homoscedasticity, and normality assumptions for the best-performing model." alt="">
-              <figcaption class="mini-cap">Residual diagnostics</figcaption>
+              <img src="./assets/plots/regression_01.png" class="lb-trigger" data-caption="Ridge residuals vs predicted log_richness. R² = 0.057, RMSE = 1.141, optimal α = 67.23." alt="">
+              <figcaption class="mini-cap">Residuals vs Predicted</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_07.png" class="lb-trigger" data-caption="Ridge top 15 features by coefficient magnitude - all 27 features are retained but shrunk toward zero. The largest coefficients reveal the strongest environmental signals." alt="">
-              <figcaption class="mini-cap">Top 15 features</figcaption>
+              <img src="./assets/plots/regression_04.png" class="lb-trigger" data-caption="Ridge coefficient magnitudes for 5 VIF-filtered features. LATITUDE has the largest negative coefficient, followed by temp_squared and mean_depth." alt="">
+              <figcaption class="mini-cap">Coefficient magnitudes</figcaption>
             </figure>
           </div>
 
@@ -378,16 +374,12 @@
           <div>
             <div style="background:#1a7a5f;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Lasso (ℓ¹)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_02.png" class="lb-trigger" data-caption="Lasso: Predicted vs Actual - similar fit to Ridge with automatic feature selection zeroing out weak predictors." alt="">
-              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
-            </figure>
-            <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_05.png" class="lb-trigger" data-caption="Lasso residual plot - residuals vs predicted values. No strong pattern indicates the model captures the main signal." alt="">
-              <figcaption class="mini-cap">Residual plot</figcaption>
+              <img src="./assets/plots/regression_02.png" class="lb-trigger" data-caption="Lasso residuals vs predicted log_richness. R² = 0.056, RMSE = 1.142, optimal α = 0.0117. Zeroes out precip_proxy and sampling_intensity." alt="">
+              <figcaption class="mini-cap">Residuals vs Predicted</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_08.png" class="lb-trigger" data-caption="Lasso top 15 features by coefficient magnitude - features driven to zero are excluded, showing Lasso's built-in feature selection." alt="">
-              <figcaption class="mini-cap">Top 15 features</figcaption>
+              <img src="./assets/plots/regression_05.png" class="lb-trigger" data-caption="Lasso coefficient magnitudes - sparse model retaining LATITUDE, temp_squared, and mean_depth as dominant predictors." alt="">
+              <figcaption class="mini-cap">Coefficient magnitudes</figcaption>
             </figure>
           </div>
 
@@ -395,16 +387,12 @@
           <div>
             <div style="background:var(--coral);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:.5rem;font-family:'DM Mono',monospace;text-align:center">Elastic Net (ℓ¹+ℓ²)</div>
             <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_03.png" class="lb-trigger" data-caption="ElasticNet: Predicted vs Actual - combines Ridge and Lasso penalties, blending shrinkage with sparsity." alt="">
-              <figcaption class="mini-cap">Predicted vs Actual</figcaption>
-            </figure>
-            <figure class="mini-fig" style="margin-bottom:.5rem">
-              <img src="./assets/plots/regression_06.png" class="lb-trigger" data-caption="ElasticNet residual plot - residuals vs predicted values for the blended ℓ¹+ℓ² penalty model." alt="">
-              <figcaption class="mini-cap">Residual plot</figcaption>
+              <img src="./assets/plots/regression_03.png" class="lb-trigger" data-caption="ElasticNet residuals vs predicted log_richness. R² = 0.056, RMSE = 1.142, optimal α = 0.0162, ℓ₁-ratio = 0.8. Nearly identical to Lasso." alt="">
+              <figcaption class="mini-cap">Residuals vs Predicted</figcaption>
             </figure>
             <figure class="mini-fig">
-              <img src="./assets/plots/regression_09.png" class="lb-trigger" data-caption="ElasticNet top 15 features - ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity with Ridge-style grouping of correlated features." alt="">
-              <figcaption class="mini-cap">Top 15 features</figcaption>
+              <img src="./assets/plots/regression_06.png" class="lb-trigger" data-caption="ElasticNet coefficient magnitudes - ℓ₁-ratio = 0.8 gives Lasso-like sparsity; coefficient pattern closely matches Lasso." alt="">
+              <figcaption class="mini-cap">Coefficient magnitudes</figcaption>
             </figure>
           </div>
 
@@ -458,6 +446,33 @@
           <figure class="mini-fig">
             <svg id="gamSvg_depth" viewBox="0 0 300 160"></svg>
             <figcaption class="mini-cap">s(mean_depth) - ocean sampling depth</figcaption>
+          </figure>
+        </div>
+
+        <hr class="method-divider">
+        <h3 style="margin-bottom:.5rem">Notebook output plots</h3>
+        <div class="plot-grid-3" style="margin-top:.5rem">
+          <figure class="mini-fig tall">
+            <img src="./assets/plots/gams_02.png" class="lb-trigger" data-caption="GAM partial effect s(abs_latitude) - monotonic decline in log_richness as distance from equator increases. Steepest drop in polar regions. Consistent with the latitudinal diversity gradient." alt="">
+            <figcaption class="mini-cap">s(abs_latitude) partial effect</figcaption>
+          </figure>
+          <figure class="mini-fig tall">
+            <img src="./assets/plots/gams_03.png" class="lb-trigger" data-caption="GAM partial effect s(temp_proxy) - peak richness at cooler temperatures, declining through warm temperatures with a possible recovery at the hottest extreme (sparse data region)." alt="">
+            <figcaption class="mini-cap">s(temp_proxy) partial effect</figcaption>
+          </figure>
+          <figure class="mini-fig tall">
+            <img src="./assets/plots/gams_04.png" class="lb-trigger" data-caption="GAM partial effect s(mean_depth) - peak richness at mid-depths, with sharp drop-offs at the extreme shallow and deep ends. Confirms the diminishing returns hypothesis for deep-ocean sites." alt="">
+            <figcaption class="mini-cap">s(mean_depth) partial effect</figcaption>
+          </figure>
+        </div>
+        <div class="plot-grid-2" style="margin-top:.65rem">
+          <figure class="mini-fig tall">
+            <img src="./assets/plots/gams_05.png" class="lb-trigger" data-caption="GAM residual analysis - residuals vs predicted values and distribution. Variance is non-constant (heteroskedasticity), violating the Gaussian constant-variance assumption. Model struggles at low-richness sites." alt="">
+            <figcaption class="mini-cap">Residual analysis</figcaption>
+          </figure>
+          <figure class="mini-fig tall">
+            <img src="./assets/plots/gams_01.png" class="lb-trigger" data-caption="Overdispersion check for GAMs - variance (y_axis) plotted against mean (x_axis). Mean = -2.047, Variance = 1.352. Variance exceeds mean, confirming overdispersion. Negative binomial would be ideal but failed to converge; Gaussian used as practical alternative." alt="">
+            <figcaption class="mini-cap">Overdispersion check</figcaption>
           </figure>
         </div>
       </div>
@@ -517,38 +532,38 @@
 
           <figure class="mini-fig">
             <img src="./assets/plots/all_forest_03.png" alt="Feature importance" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
-              data-caption="Random Forest feature importance - environmental predictors ranked by mean decrease in variance. Mean depth and sampling intensity are the top drivers.">
-            <figcaption class="mini-cap">Random Forest - feature importance by predictor</figcaption>
+              data-caption="Random Forest feature importance - full model (14 features, log_area excluded). Longitude (32%), mean depth (22%), and latitude (10%) are the top three predictors. Geographic coordinates dominate, reflecting ocean-basin-level variation.">
+            <figcaption class="mini-cap">RF feature importance - full model</figcaption>
           </figure>
 
           <figure class="mini-fig">
-            <img src="./assets/plots/all_forest_07.png" alt="Tree structure" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
-              data-caption="From-scratch decision tree (top 3 levels shown) - recursive partitioning of the environmental feature space, illustrating how splits are chosen at each node.">
-            <figcaption class="mini-cap">From-scratch decision tree structure (top 3 levels)</figcaption>
+            <img src="./assets/plots/all_forest_04.png" alt="Feature importance ecological" class="lb-trigger" style="height:260px;width:100%;object-fit:contain"
+              data-caption="Random Forest feature importance - ecological variables only (sampling_intensity removed). Mean depth rises to 35% importance; temp_squared and temp_proxy follow at 13% each. Confirms ecological signal is not an artifact of survey effort.">
+            <figcaption class="mini-cap">RF feature importance - ecological only</figcaption>
           </figure>
 
           <figure class="mini-fig">
-            <img src="./assets/plots/all_forest_04.png" alt="all_forest_04" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output - all_forest_04. Additional feature importance or model diagnostic from the tree/forest notebook.">
-            <figcaption class="mini-cap">all_forest_04 - feature importance comparison</figcaption>
+            <img src="./assets/plots/all_forest_05.png" alt="Partial dependence plots" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Partial dependence plots for 6 key predictors: mean_depth, sampling_intensity, temp_proxy, abs_latitude, temp_squared, temp_range_proxy. Shows marginal relationship of each predictor on log marine species density, holding all others constant.">
+            <figcaption class="mini-cap">Partial dependence plots (6 predictors)</figcaption>
           </figure>
 
           <figure class="mini-fig">
-            <img src="./assets/plots/all_forest_05.png" alt="all_forest_05" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output - all_forest_05. Cross-validation error analysis or model performance curves from the tree/forest notebook.">
-            <figcaption class="mini-cap">all_forest_05 - model performance analysis</figcaption>
+            <img src="./assets/plots/all_forest_06.png" alt="Error analysis" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="Random Forest error analysis. Left: predicted vs actual log species density - points follow the diagonal with underprediction at high-density extremes (RF averaging effect). Right: residuals vs predicted - approximately centered around zero with mild heteroskedasticity at higher values.">
+            <figcaption class="mini-cap">Error analysis - predicted vs actual + residuals</figcaption>
           </figure>
 
           <figure class="mini-fig">
-            <img src="./assets/plots/all_forest_06.png" alt="all_forest_06" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output - all_forest_06. Predicted vs actual or residual scatter for the tree-based models.">
-            <figcaption class="mini-cap">all_forest_06 - predicted vs actual</figcaption>
+            <img src="./assets/plots/all_forest_07.png" alt="Tree structure" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="From-scratch decision tree structure (top 3 levels). First split on abs_latitude at 33.16 degrees (subtropical boundary), then longitude and mean_depth at deeper levels. R² = 0.585, RMSE = 0.733.">
+            <figcaption class="mini-cap">From-scratch decision tree (top 3 levels)</figcaption>
           </figure>
 
           <figure class="mini-fig">
-            <img src="./assets/plots/all_forest_08.png" alt="all_forest_08" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
-              data-caption="Tree model output - all_forest_08. Feature importance ranking from an alternative tree configuration or RFECV selection.">
-            <figcaption class="mini-cap">all_forest_08 - feature importance (RFECV / alt model)</figcaption>
+            <img src="./assets/plots/all_forest_08.png" alt="Feature importance with log_area" class="lb-trigger" style="height:240px;width:100%;object-fit:contain"
+              data-caption="RF feature importance WITH log_area included - log_area dominates at 60% importance, artificially suppressing all ecological predictors. This circular relationship (area is in the target variable denominator) motivated its exclusion from the main analysis.">
+            <figcaption class="mini-cap">RF feature importance - with log_area (appendix)</figcaption>
           </figure>
 
         </div>
@@ -637,7 +652,7 @@
       <div class="finding-card blue">
         <div class="finding-num">05 - LASSO / ELASTIC NET</div>
         <h4>Automatic feature selection agrees with theory</h4>
-        <p>At optimal α, Lasso retains ~20 of 27 features - zeroing out several correlated geographic proxies. The retained set aligns with ecological priors: latitude, temperature, depth, and sampling effort are kept; redundant interaction terms and proxies are pruned.</p>
+        <p>After VIF filtering, 5 predictors remain (LATITUDE, temp_squared, mean_depth, precip_proxy, sampling_intensity). At optimal α = 0.0117, Lasso zeroes out precip_proxy and sampling_intensity - retaining only the three strongest ecological signals: latitude, temperature, and depth.</p>
       </div>
       <div class="finding-card">
         <div class="finding-num">06 - DECISION TREES</div>
@@ -650,7 +665,7 @@
     <div class="gallery-grid">
       <div class="gallery-card">
         <h3>GAM - latitude gradient</h3>
-        <img src="./assets/plots/gams_01.png" alt="GAM latitude smooth" class="lb-trigger" data-caption="GAM smooth partial effect for abs_latitude - showing how species richness declines with distance from the equator. This is the latitudinal diversity gradient, one of ecology's oldest and most robust patterns.">
+        <img src="./assets/plots/gams_02.png" alt="GAM latitude smooth" class="lb-trigger" data-caption="GAM smooth partial effect for abs_latitude - showing how species richness declines with distance from the equator. This is the latitudinal diversity gradient, one of ecology's oldest and most robust patterns.">
         <p>Smooth relationship between absolute latitude and species richness. Source: <code>GAMs.ipynb</code></p>
       </div>
       <div class="gallery-card">
@@ -660,7 +675,7 @@
       </div>
       <div class="gallery-card">
         <h3>Regression - coefficient magnitudes</h3>
-        <img src="./assets/plots/regression_07.png" alt="Regression coefficients" class="lb-trigger" data-caption="Coefficient magnitudes for Ridge, Lasso, and Elastic Net - showing shrinkage and feature selection patterns. Lasso zeroes out redundant predictors while Ridge distributes weight across all 27 features.">
+        <img src="./assets/plots/regression_04.png" alt="Ridge coefficients" class="lb-trigger" data-caption="Ridge coefficient magnitudes for 5 VIF-filtered features. LATITUDE is the dominant predictor (negative), followed by temp_squared and mean_depth. Lasso and Elastic Net shrink precip_proxy and sampling_intensity to zero.">
         <p>Shrinkage patterns across all three regularization strategies. Source: <code>Regression.ipynb</code></p>
       </div>
     </div>
@@ -837,9 +852,9 @@ function drawGamPlot(svgId, predictor, df) {
 let regModel = 'ridge';
 
 const regCfg = {
-  ridge:   {optAlpha: 1.0,   baseRmse: 1.141,  baseR2: 0.057,  rmseK: 0.038, r2K: 0.008, sparse: false, note: 'Ridge (ℓ²) shrinks all 27 coefficients - none reach zero. Optimal α = 1.'},
-  lasso:   {optAlpha: 0.001, baseRmse: 1.416,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Lasso (ℓ¹) zeroes out weak predictors. At optimal α = 0.001, ~20 features remain active.'},
-  elastic: {optAlpha: 0.001, baseRmse: 1.416,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Elastic Net blends ℓ¹+ℓ² penalties. ℓ₁-ratio = 0.8 gives mostly Lasso-like sparsity. Optimal α = 0.001.'}
+  ridge:   {optAlpha: 67.23,  baseRmse: 1.141,  baseR2: 0.057,  rmseK: 0.038, r2K: 0.008, sparse: false, note: 'Ridge (ℓ²) shrinks all 5 VIF-filtered coefficients - none reach zero. Optimal α = 67.23.'},
+  lasso:   {optAlpha: 0.0117, baseRmse: 1.142,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Lasso (ℓ¹) zeroes out precip_proxy and sampling_intensity. Optimal α = 0.0117.'},
+  elastic: {optAlpha: 0.0162, baseRmse: 1.142,  baseR2: 0.056,  rmseK: 0.10,  r2K: 0.008, sparse: true,  note: 'Elastic Net blends ℓ¹+ℓ² penalties. ℓ₁-ratio = 0.8. Optimal α = 0.0162. Nearly identical to Lasso.'}
 };
 
 // Slider 1-100 maps to alpha = optAlpha × 10^((s-50)/22)
@@ -933,24 +948,24 @@ function computeReg() {
   const rmse = cfg.baseRmse + cfg.rmseK * d * d + l1Pen;
   const r2   = clamp(cfg.baseR2 - cfg.r2K * d * d - l1Pen * 0.5, 0.05, 0.85);
 
-  let features = 27;
+  let features = 5;
   if (cfg.sparse) {
     if (d > 0) {
       const l1f = regModel === 'elastic' ? (0.5 + 0.5 * l1) : 1.0;
-      features = clamp(Math.round(22 * Math.exp(-1.1 * d * l1f)), 1, 27);
+      features = clamp(Math.round(4 * Math.exp(-1.1 * d * l1f)), 1, 5);
     } else {
-      features = Math.min(27, Math.round(20 + 7 * Math.max(0, 1 + d)));
+      features = Math.min(5, Math.round(3 + 2 * Math.max(0, 1 + d)));
     }
   }
 
   document.getElementById('regRmse').textContent      = rmse.toFixed(4);
   document.getElementById('regR2').textContent        = r2.toFixed(4);
-  document.getElementById('regFeatures').textContent  = features + ' / 27';
+  document.getElementById('regFeatures').textContent  = features + ' / 5';
   document.getElementById('regAlphaDisp').textContent = formatAlpha(alpha);
   document.getElementById('alphaVal').textContent     = formatAlpha(alpha);
   document.getElementById('l1Val').textContent        = l1.toFixed(2);
-  document.getElementById('featFill').style.width     = (features / 27 * 100) + '%';
-  document.getElementById('featBarLabel').textContent = features + ' / 27';
+  document.getElementById('featFill').style.width     = (features / 5 * 100) + '%';
+  document.getElementById('featBarLabel').textContent = features + ' / 5';
   document.getElementById('regNote').textContent      = cfg.note;
 
   drawRegPlot(s);
@@ -970,14 +985,11 @@ function setRegModel(model, btn) {
    REGRESSION - live coefficient bar chart
 ═══════════════════════════════════════════ */
 const regFeatures = [
-  {name: 'abs_latitude', ridge: -0.48, lasso: -0.51, elastic: -0.50},
-  {name: 'temp_proxy',   ridge:  0.31, lasso:  0.29, elastic:  0.28},
-  {name: 'mean_depth',   ridge: -0.22, lasso: -0.19, elastic: -0.20},
-  {name: 'n_samples',    ridge:  0.19, lasso:  0.22, elastic:  0.21},
-  {name: 'duration',     ridge:  0.15, lasso:  0.13, elastic:  0.14},
-  {name: 'area',         ridge:  0.12, lasso:  0.09, elastic:  0.08},
-  {name: 'dist_coast',   ridge: -0.09, lasso: -0.06, elastic: -0.05},
-  {name: 'tropical',     ridge:  0.07, lasso:  0.04, elastic:  0.06},
+  {name: 'LATITUDE',          ridge: -0.306, lasso: -0.308, elastic: -0.305},
+  {name: 'temp_squared',      ridge: -0.152, lasso: -0.161, elastic: -0.158},
+  {name: 'mean_depth',        ridge:  0.149, lasso:  0.144, elastic:  0.142},
+  {name: 'precip_proxy',      ridge: -0.018, lasso: -0.001, elastic: -0.000},
+  {name: 'sampling_intensity',ridge:  0.002, lasso:  0.000, elastic:  0.000},
 ];
 
 function scaledCoef(optVal, d, isSparse, rank) {
