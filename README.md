@@ -22,6 +22,7 @@ Biodiversity-Predictors/
     Regression.ipynb      # Ridge, Lasso, Elastic Net
     GAMs.ipynb            # Generalized Additive Models
     all_forest.ipynb      # Decision Tree + Random Forest
+    heat_map.ipynb        # Geographic distribution heatmap
   data/
     raw/                  # immutable source files
     processed/            # cleaned, model-ready datasets
@@ -60,4 +61,4 @@ Outputs (plots, metrics) are written to `website-showcase/assets/plots/`.
 
 ## Dependencies
 
-Key packages: `scikit-learn`, `statsmodels`, `pygam`, `numpy`, `pandas`, `matplotlib`
+Key packages: `scikit-learn`, `statsmodels`, `numpy`, `pandas`, `matplotlib`, `scipy`, `geopandas`, `geodatasets`
